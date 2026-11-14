@@ -785,7 +785,8 @@ function strike(){
 function explode(x, y, cols){
   const b=document.getElementById("board");
   if(isZen() || isAtlas()){
-    if(isZen()) chime(); else ding(); if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if(isAtlas()){ ding(); return; }
+    chime(); if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     for(let i=0;i<2;i++) setTimeout(()=>{ const e=document.createElement("div"); e.className="ripple"; e.style.cssText=`left:${x}px;top:${y}px`; b.appendChild(e); setTimeout(()=>e.remove(),1500); }, i*350);
     return; }
   if(isCrew()) strike(); else boom();
@@ -1043,7 +1044,7 @@ function answer(given, btn){
       if(lastEv && q.type==="find" && lastEv.clientX>=b.left && lastEv.clientX<=b.right){ px=lastEv.clientX; py=lastEv.clientY; }
       else if(tgt){ const r=tgt.getBoundingClientRect(); px=r.left+r.width/2; py=r.top+r.height/2; }
       if(px!=null) explode(px-b.left, py-b.top, q.kind==="prov" ? blockCol(q.name) : ["#d7263d","#ffffff","#8b8b8b"]); }
-    popAt("+"+pts, lastEv); setTimeout(ding, 180);
+    if(!isAtlas()) popAt("+"+pts, lastEv); setTimeout(ding, 180);
     if(q.kind==="prov") provEl[q.name].classList.add("good"); else ring(q.name,"good");
     if(btn) btn.classList.add("good");
   } else {
