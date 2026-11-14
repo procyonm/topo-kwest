@@ -409,7 +409,7 @@ const REGIONS = {
     provAt:{"Noord-Brabant":[51.50,4.80,"below"],"Limburg":[51.25,5.85,"end"],"Zeeland":[51.70,3.95,"above"]},
     labelAt:{"Maastricht":"end","Heerlen":"above","Vaalserberg":"end","Venlo":"end","Maas":"end","Middelburg":"above","Biesbos":"end"}}
 };
-let region = (()=>{ try{ const r = localStorage.getItem("topo-region"); return REGIONS[r] ? r : "west"; }catch(e){ return "west"; } })();
+let region = (()=>{ try{ const r = localStorage.getItem("topo-region"); return REGIONS[r] ? r : "zuid"; }catch(e){ return "zuid"; } })();
 
 
 
