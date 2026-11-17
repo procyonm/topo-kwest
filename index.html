@@ -325,6 +325,7 @@ body.atlas{--dot:#d1263b;--hit:#f2b705;background:#eef3f7}
 .pet{position:absolute;left:8px;bottom:6px;z-index:7;pointer-events:none;font-size:34px;line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35));animation:petwalk 16s ease-in-out infinite alternate}
 .pet span{display:block;animation:petbob .5s ease-in-out infinite alternate}
 .pet.cheer span{animation:petjump .6s ease-out}
+.pet.go{animation:none;transition:left .6s ease-in-out,top .6s ease-in-out}
 .pet i{position:absolute;left:70%;top:-20px;font-style:normal;font-size:22px;animation:up .9s ease-out forwards}
 @keyframes petwalk{to{left:calc(100% - 48px)}}
 @keyframes petbob{to{transform:translateY(-3px)}}
@@ -1194,10 +1195,21 @@ function showPet(){
   if(!el){ el = document.createElement("div"); el.id = "pet"; el.className = "pet"; el.setAttribute("aria-hidden","true"); el.innerHTML = "<span></span>"; document.getElementById("board").appendChild(el); }
   el.firstChild.textContent = it.ic;
 }
-function petCheer(){
+
+let petT;
+function petCheer(x, y){
   const el = document.getElementById("pet"); if(!el) return;
-  el.classList.remove("cheer"); void el.offsetWidth; el.classList.add("cheer");
-  const b = document.createElement("i"); b.textContent = "🎉"; el.appendChild(b); setTimeout(() => b.remove(), 900);
+  const party = () => { el.classList.remove("cheer"); void el.offsetWidth; el.classList.add("cheer");
+    const b = document.createElement("i"); b.textContent = "🎉"; el.appendChild(b); setTimeout(() => b.remove(), 900); };
+  if(x==null){ party(); return; }
+  clearTimeout(petT);
+  const box = () => el.parentElement.getBoundingClientRect(), r = el.getBoundingClientRect(), bb = box();
+  el.style.left = (r.left-bb.left)+"px"; el.style.top = (r.top-bb.top)+"px"; el.style.bottom = "auto"; el.classList.add("go");
+  void el.offsetWidth;
+  el.style.left = (x-20)+"px"; el.style.top = (y-42)+"px";
+  petT = setTimeout(() => { party();
+    petT = setTimeout(() => { el.style.left = "8px"; el.style.top = (box().height-46)+"px";
+      petT = setTimeout(() => { el.classList.remove("go"); el.style.left = el.style.top = el.style.bottom = ""; }, 650); }, 1500); }, 650);
 }
 function petShop(){
   G = null; hud.hidden = true; card.classList.add("menu"); card.classList.remove("writing"); clearFx(); showDots([]);
@@ -1363,8 +1375,9 @@ function answer(given, btn){
       let px, py;
       if(lastEv && q.type==="find" && lastEv.clientX>=b.left && lastEv.clientX<=b.right){ px=lastEv.clientX; py=lastEv.clientY; }
       else if(tgt){ const r=tgt.getBoundingClientRect(); px=r.left+r.width/2; py=r.top+r.height/2; }
-      if(px!=null) explode(px-b.left, py-b.top, q.kind==="prov" ? blockCol(q.name) : ["#d7263d","#ffffff","#8b8b8b"]); }
-    petCheer(); if(!isAtlas()) popAt("+"+pts, lastEv); setTimeout(ding, 180);
+      if(px!=null) explode(px-b.left, py-b.top, q.kind==="prov" ? blockCol(q.name) : ["#d7263d","#ffffff","#8b8b8b"]);
+      if(px!=null) petCheer(px-b.left, py-b.top); else petCheer(); }
+    if(!isAtlas()) popAt("+"+pts, lastEv); setTimeout(ding, 180);
     if(q.kind==="prov") provEl[q.name].classList.add("good"); else ring(q.name,"good");
     if(btn) btn.classList.add("good");
   } else {
