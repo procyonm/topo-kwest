@@ -325,7 +325,9 @@ body.atlas{--dot:#d1263b;--hit:#f2b705;background:#eef3f7}
 .pet{position:absolute;left:8px;bottom:6px;z-index:7;pointer-events:none;font-size:34px;line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35));animation:petwalk 16s ease-in-out infinite alternate}
 .pet span{display:block;animation:petbob .5s ease-in-out infinite alternate}
 .pet.cheer span{animation:petjump .6s ease-out}
-.pet.go{animation:none;transition:left .6s ease-in-out,top .6s ease-in-out}
+.pet.go{animation:none}
+.pet.run span{animation:petrun .16s ease-in-out infinite alternate}
+@keyframes petrun{from{transform:translateY(0) rotate(-10deg)}to{transform:translateY(-7px) rotate(10deg)}}
 .pet i{position:absolute;left:70%;top:-20px;font-style:normal;font-size:22px;animation:up .9s ease-out forwards}
 @keyframes petwalk{to{left:calc(100% - 48px)}}
 @keyframes petbob{to{transform:translateY(-3px)}}
@@ -1204,12 +1206,16 @@ function petCheer(x, y){
   if(x==null){ party(); return; }
   clearTimeout(petT);
   const box = () => el.parentElement.getBoundingClientRect(), r = el.getBoundingClientRect(), bb = box();
-  el.style.left = (r.left-bb.left)+"px"; el.style.top = (r.top-bb.top)+"px"; el.style.bottom = "auto"; el.classList.add("go");
+
+  const runTo = (nx, ny, then) => { const cx = parseFloat(el.style.left), cy = parseFloat(el.style.top);
+    const s = Math.min(2.2, Math.max(0.9, Math.hypot(nx-cx, ny-cy) / 220));
+    el.style.transition = `left ${s}s linear, top ${s}s linear`; el.classList.add("run"); void el.offsetWidth;
+    el.style.left = nx+"px"; el.style.top = ny+"px";
+    petT = setTimeout(() => { el.classList.remove("run"); then(); }, s*1000); };
+  el.style.transition = "none"; el.style.left = (r.left-bb.left)+"px"; el.style.top = (r.top-bb.top)+"px"; el.style.bottom = "auto"; el.classList.add("go");
   void el.offsetWidth;
-  el.style.left = (x-20)+"px"; el.style.top = (y-42)+"px";
-  petT = setTimeout(() => { party();
-    petT = setTimeout(() => { el.style.left = "8px"; el.style.top = (box().height-46)+"px";
-      petT = setTimeout(() => { el.classList.remove("go"); el.style.left = el.style.top = el.style.bottom = ""; }, 650); }, 1500); }, 650);
+  runTo(x-20, y-42, () => { party();
+    petT = setTimeout(() => runTo(8, box().height-46, () => { el.classList.remove("go"); el.style.left = el.style.top = el.style.bottom = el.style.transition = ""; }), 1300); });
 }
 function petShop(){
   G = null; hud.hidden = true; card.classList.add("menu"); card.classList.remove("writing"); clearFx(); showDots([]);
