@@ -321,6 +321,27 @@ body.atlas{--dot:#d1263b;--hit:#f2b705;background:#eef3f7}
 .atlas .ripple{border-color:#2f6fb3}
 .ripple{position:absolute;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:3px solid #8a6fc9;pointer-events:none;z-index:5;animation:ripple 1.4s ease-out forwards}
 @keyframes ripple{to{transform:scale(9);opacity:0}}
+
+.wbox{display:flex;gap:8px}
+.wbox input{flex:1;min-width:0;box-sizing:border-box;font:800 22px var(--body);color:#1b1b1b;background:#fff;border:3px solid #000;border-radius:0;padding:8px 12px;min-height:52px}
+.wbox input:focus{outline:3px solid var(--hit);outline-offset:1px}
+.wbox input:disabled{opacity:.6}
+.wbox .opt{flex:none;padding:8px 16px}
+.spell{display:block;font:900 clamp(26px,5vw,36px)/1.2 var(--body);letter-spacing:1px;color:var(--ink);margin:4px 0;overflow-wrap:anywhere}
+.spell mark{background:var(--bad);color:#fff;border-radius:3px;padding:0 2px}
+.spell.yours{display:inline;font-size:19px;letter-spacing:0}
+.spell.yours mark{background:transparent;color:var(--bad);text-decoration:underline wavy 2px;text-underline-offset:4px}
+.feedback .small{display:block;font-size:15px;margin-top:4px}
+.feedback .big{margin-top:10px}
+.crew .wbox input{border:3px solid #05070d;border-radius:12px}
+.zen .wbox input{border:2px solid #b7c6cb;border-radius:14px}
+.zen .spell{color:#2f3d45} .zen .spell mark{background:#c8463d} .zen .spell.yours mark{background:transparent;color:#c8463d}
+@media (max-width:760px){
+  .card.writing .lvprog,.card.writing .qnum{display:none}
+  .card.writing .q{font-size:21px}
+  .wrap.typing header,.wrap.typing .hud{display:none}
+  .wrap.typing .panel{max-height:none}
+}
 </style>
 
 <div class="wrap">
@@ -427,6 +448,11 @@ const T = {
     toetsDesc: (provs, isl, more) => provs.join(", ")+" en hun hoofdsteden"+(isl?", plus de eilanden":"")+(more?", steden, water en plekken":""),
     lv_prov:"De 12 provincies", lvd_prov:"Vind ze op de kaart", lv_cap:"Hoofdsteden", lvd_cap:"Elke provincie heeft er één",
     lv_isl:"Waddeneilanden", lvd_isl:"Ezelsbruggetje: TV TAS", lv_boss:"Eindbaas", lvd_boss:() => `Alles van ${T.nl["reg_"+region]} door elkaar. ${bossN()} vragen.`,
+    lv_write:"Schrijf de namen", lvd_write:() => `Typ de naam van de gele plek. Spelling telt! ${WRITE_N} vragen.`,
+    writeQ: w => `Schrijf de naam van ${w==="water"||w==="isl"?"het":"de"} <em>gele</em> ${T.nl["w_"+w]}.`,
+    writePh:"Typ de naam…", check:"Kijk na ✓", wYours:"Jij schreef:", wBack:"Hij komt straks nog een keer.", wNext:"Verder →",
+    wAlmost: th => th==="zen" ? "Bijna goed. Kijk rustig naar de rode letters:" : "Bijna goed! Kijk naar de rode letters:",
+    wBad: th => th==="zen" ? "Rustig ademen. Zo schrijf je het:" : th==="crew" ? "ALARM! Zo schrijf je het:" : "Zo schrijf je het:",
     qnum: (title, i, n) => `${title} · vraag ${i} van ${n}`,
     where: n => `Waar ligt <em>${n}</em>?`, tapProv:"Tik op de provincie.", tapDot:"Tik op de goede stip.",
     which: w => `${w==="water"?"Welk":"Welke"} ${T.nl["w_"+w]} is <em>geel</em>?`,
@@ -472,6 +498,11 @@ const T = {
     toetsDesc: (provs, isl, more) => provs.join(", ")+" and their capitals"+(isl?", plus the islands":"")+(more?", cities, water and places":""),
     lv_prov:"The 12 provinces", lvd_prov:"Find them on the map", lv_cap:"Capitals", lvd_cap:"Every province has one",
     lv_isl:"Wadden Islands", lvd_isl:"Memory trick: TV TAS", lv_boss:"Final boss", lvd_boss:() => `Everything from ${T.en["reg_"+region]} mixed up. ${bossN()} questions.`,
+    lv_write:"Write the names", lvd_write:() => `Type the name of the yellow place. Spelling counts! ${WRITE_N} questions.`,
+    writeQ: w => `Write the name of the <em>yellow</em> ${T.en["w_"+w]}.`,
+    writePh:"Type the name…", check:"Check ✓", wYours:"You wrote:", wBack:"It will come back later.", wNext:"Next →",
+    wAlmost: th => th==="zen" ? "Nearly right. Look calmly at the red letters:" : "So close! Look at the red letters:",
+    wBad: th => th==="zen" ? "Breathe slowly. This is how you write it:" : th==="crew" ? "ALARM! This is how you write it:" : "This is how you write it:",
     qnum: (title, i, n) => `${title} · question ${i} of ${n}`,
     where: n => `Where is <em>${n}</em>?`, tapProv:"Tap the province.", tapDot:"Tap the right dot.",
     which: w => `Which ${T.en["w_"+w]} is <em>yellow</em>?`,
@@ -524,7 +555,7 @@ const ACH_EN = {
   spion:["Secret agent","Hide the names in 'Learn the map'"], maas:["Maas master","All the water right in the test, no mistakes"],
   "z-perfect":["South without mistakes","Beat My test: South without a single mistake"], snel:["Lightning fast","10 times 'Super fast!' in one round"],
   combo12:["Combo legend","Give 12 right answers in a row"], punten:["Score cannon","Get 10,000 points in one round"],
-  oefen0:["Practice champion","Play 'Practise my misses' without a mistake"], terug:["Comeback","Press Stop and keep playing later"],
+  oefen0:["Practice champion","Play 'Practise my misses' without a mistake"], spell:["Spelling champion","Play 'Write the names' without a single spelling mistake"], terug:["Comeback","Press Stop and keep playing later"],
   dagen:["Three days","Play on 3 different days"], bouw:["Master builder","Give a province a different block or colour"]
 };
 const aN = a => a.gen ? a[lang][0] : lang==="en" && ACH_EN[a.id] ? ACH_EN[a.id][0] : a.name;
@@ -557,9 +588,14 @@ const LEVELS = [
 
 
   Object.defineProperties(mkLevel("boss", {kind:"mix", boss:true}), {
+    parts:{get(){ return toetsLevel().parts; }, enumerable:true}, view:{get(){ return REGIONS[region].view; }, enumerable:true}}),
+
+
+  Object.defineProperties(mkLevel("write", {kind:"mix", write:true}), {
+    id:{get(){ return "schrijf-"+region; }, enumerable:true},
     parts:{get(){ return toetsLevel().parts; }, enumerable:true}, view:{get(){ return REGIONS[region].view; }, enumerable:true}})
 ];
-const ROUND = 10, TIME = 20000;
+const ROUND = 10, TIME = 20000, WRITE_N = 8;
 
 
 let soundOn = true, ac = null;
@@ -671,6 +707,7 @@ const ACH = [
   {id:"combo12", name:"Combo-legende",     mat:"amethist", hint:"Geef 12 goede antwoorden op rij"},
   {id:"punten",  name:"Score-kanon",       mat:"redstone", hint:"Haal 10.000 punten in één ronde"},
   {id:"oefen0",  name:"Oefenkampioen",     mat:"smaragd",  hint:"Speel 'Oefen mijn missers' zonder fout"},
+  {id:"spell",   name:"Spellingkampioen",  mat:"amethist", hint:"Speel 'Schrijf de namen' zonder één spelfout"},
   {id:"terug",   name:"Terugkomer",        mat:"koper",    hint:"Druk op Stop en speel later verder"},
 
   {id:"dagen",   name:"Drie dagen",        mat:"ijzer",    hint:"Speel op 3 verschillende dagen", gone:true},
@@ -679,7 +716,7 @@ const ACH = [
 
 
 const EASY_TO_HARD = ["first","kijk","bouw","spion","terug","drie","ronde","oefen","duizend","vijf","speur","l-prov","combo",
-  "l-cap","rondes5","l-isl","oefen0","door","dagen","taal2","kaart","r-noord","r-oost","r-west","r-zuid","twee","perfect",
+  "l-cap","rondes5","l-isl","oefen0","door","dagen","taal2","kaart","r-noord","r-oost","r-west","r-zuid","twee","perfect","spell",
   "maas","punt5k","snel","combo12","l-boss","z-perfect","punten","topo","alles"];
 const rank = a => { const i = EASY_TO_HARD.indexOf(a.id); return i < 0 ? 999 : i; };
 
@@ -958,7 +995,38 @@ const card = document.getElementById("card"), hud = document.getElementById("hud
 let G = null;
 const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];} return a; };
 
+
+
+const cleanSpell = s => s.normalize("NFC").replace(/[’‘`´ʼ′]/g,"'").replace(/[‐‑‒–—]/g,"-").replace(/\s+/g," ").replace(/ ?- ?/g,"-").trim();
+const normSpell = s => cleanSpell(s).toLowerCase();
+const escH = c => ({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c] || c);
+
+function spellDiff(given, want){
+  const A = [...cleanSpell(given)], B = [...want], a = A.map(c=>c.toLowerCase()), b = B.map(c=>c.toLowerCase());
+  const n = a.length, m = b.length, d = Array.from({length:n+1}, (_, i) => Array(m+1).fill(0));
+  for(let i=0;i<=n;i++) d[i][0]=i; for(let j=0;j<=m;j++) d[0][j]=j;
+  for(let i=1;i<=n;i++) for(let j=1;j<=m;j++) d[i][j] = Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+  const badA = Array(n).fill(false), badB = Array(m).fill(false); let i = n, j = m;
+  while(i>0 || j>0){
+    if(i>0 && j>0 && d[i][j]===d[i-1][j-1]+(a[i-1]===b[j-1]?0:1)){ if(a[i-1]!==b[j-1]) badA[i-1] = badB[j-1] = true; i--; j--; }
+    else if(i>0 && d[i][j]===d[i-1][j]+1){ badA[i-1] = true; i--; }
+    else { badB[j-1] = true; j--; }
+  }
+  const mk = (C, bad) => C.map((c,k) => bad[k] ? `<mark>${c===" " ? "␣" : escH(c)}</mark>` : c===" " ? "&nbsp;" : escH(c)).join("");
+  return {dist:d[n][m], want:mk(B, badB), yours:mk(A, badA)};
+}
+
+function writeQuestions(level, only){
+  const items = level.parts.flatMap(([k,p]) => p.map(x => ({kind:k, name: typeof x==="string"?x:x.name, pool:p})));
+  if(only) return shuffle(items.filter(q => only.includes(q.name))).map(q => ({...q, type:"write"}));
+  const seen = load("topo-write") || {};
+  const pick = shuffle(items).sort((x,y) => (seen[x.name]||0) - (seen[y.name]||0)).slice(0, WRITE_N);
+  const now = Date.now(); pick.forEach(q => seen[q.name] = now); save("topo-write", seen);
+  return shuffle(pick).map(q => ({...q, type:"write"}));
+}
+
 function buildQuestions(level, only){
+  if(level.write) return writeQuestions(level, only);
   let items = [];
   const add = (kind, pool) => pool.forEach(x => items.push({kind, name: typeof x==="string"?x:x.name, pool}));
   if(level.parts) level.parts.forEach(([k,p]) => add(k,p));
@@ -1008,14 +1076,26 @@ function next(redraw){
   } else {
     if(q.kind==="prov") provEl[q.name].classList.add("hl");
     else { const d = shownDots.find(c=>c.name===q.name); d.el.classList.add("hl"); ring(q.name,""); if(item.river) document.getElementById(item.river).classList.add("hl"); }
+    if(q.type==="write"){
+      html += `<p class="q">${t("writeQ", what)}</p><form class="wbox" id="wbox" autocomplete="off">
+        <input id="wIn" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="${t("writePh")}" aria-label="${t("writePh")}">
+        <button class="opt" type="submit">${t("check")}</button></form>`;
+    } else {
     const names = q.pool.map(x => typeof x==="string"?x:x.name).filter(n=>n!==q.name);
     const opts = (redraw && q.opts) || (q.opts = shuffle([q.name, ...shuffle(names).slice(0,3)]));
     html += `<p class="q">${t("which", what)}</p><div class="opts">${opts.map(o=>`<button class="opt" type="button" data-o="${o}">${o}</button>`).join("")}</div>`;
+    }
   }
 
   html += `<div class="feedback" id="fb"></div>`;
-  card.innerHTML = html;
-  card.querySelectorAll(".opt").forEach(b => b.onclick = () => answer(b.dataset.o, b));
+  card.innerHTML = html; card.classList.toggle("writing", q.type==="write");
+  card.querySelectorAll(".opt[data-o]").forEach(b => b.onclick = () => answer(b.dataset.o, b));
+  const wb = document.getElementById("wbox");
+  if(wb){ const inp = document.getElementById("wIn");
+    if(redraw && G.typed) inp.value = G.typed; else G.typed = "";
+    inp.oninput = () => { G.typed = inp.value; };
+    wb.onsubmit = e => { e.preventDefault(); if(G.lock) return; if(!inp.value.trim()){ inp.focus(); return; } inp.disabled = true; answer(inp.value); };
+    inp.focus({preventScroll:true}); }
   cancelAnimationFrame(G.raf); if(!redraw || !G.t0) G.t0 = performance.now(); tick();
 }
 function tick(){
@@ -1032,7 +1112,7 @@ function onMapPick(pick){
 }
 function answer(given, btn){
   G.lock = true; cancelAnimationFrame(G.raf);
-  const q = G.qs[G.i], ok = given===q.name, fb = document.getElementById("fb");
+  const q = G.qs[G.i], ok = q.type==="write" ? normSpell(given)===normSpell(q.name) : given===q.name, fb = document.getElementById("fb");
   if(ok){
     G.streak++; G.maxS = Math.max(G.maxS||0, G.streak); if(earn("first")) G.newT.push("first"); if(G.streak>=5 && earn("vijf")) G.newT.push("vijf"); if(G.streak>=6 && earn("combo")) G.newT.push("combo"); if(G.streak>=12 && earn("combo12")) G.newT.push("combo12");
     const bonus = Math.round(50 * Math.max(0, 1-(performance.now()-G.t0)/TIME));
@@ -1049,16 +1129,25 @@ function answer(given, btn){
     if(btn) btn.classList.add("good");
   } else {
     G.streak=0; G.missed.push(q.name);
-    G.qs.push({...q, type: q.type==="find" ? "name" : "find"});
+    G.qs.push({...q, type: q.type==="write" ? "write" : q.type==="find" ? "name" : "find"});
     fb.className="feedback bad"; fb.textContent = t("bad", theme, q.name);
     if(isCrew()){ const bd=document.getElementById("board"); bd.classList.remove("alarm"); void bd.offsetWidth; bd.classList.add("alarm"); }
     if(isZen()) softLow(); else beep([220,180],.12);
-    if(q.kind==="prov"){ if(PATHS[given]) provEl[given].classList.add("bad"); provEl[q.name].classList.remove("hl"); provEl[q.name].classList.add("answer"); }
+    if(q.kind==="prov"){ if(q.type!=="write" && PATHS[given]) provEl[given].classList.add("bad"); provEl[q.name].classList.remove("hl"); provEl[q.name].classList.add("answer"); }
     else { ring(q.name,"good blink"); if(q.type==="find") ring(given,"bad"); }
     if(btn){ btn.classList.add("bad"); card.querySelector(`.opt[data-o="${CSS.escape(q.name)}"]`)?.classList.add("good"); }
   }
   updateHud(); G.i++;
-  const gNow = G; setTimeout(() => { if(G === gNow) next(); }, ok ? 900 : 2000);
+  const gNow = G;
+  if(q.type==="write" && !ok){
+    const df = spellDiff(given, q.name);
+    fb.innerHTML = `${t(df.dist<=2 ? "wAlmost" : "wBad", theme)}<span class="spell">${df.want}</span>
+      <span class="small">${t("wYours")} <span class="spell yours">${df.yours}</span></span><span class="small">${t("wBack")}</span>
+      <button class="big" id="wNext" type="button">${t("wNext")}</button>`;
+    const nb = document.getElementById("wNext"); nb.onclick = () => { if(G === gNow) next(); }; nb.focus({preventScroll:true});
+    return;
+  }
+  setTimeout(() => { if(G === gNow) next(); }, ok ? 900 : 2000);
 }
 function finish(){
   setView(FULL); clearFx(); showDots([]); svg.classList.remove("clickable");
@@ -1077,6 +1166,7 @@ function finish(){
   if(G.practice) tgot("oefen");
   if(G.practice && nMiss===0) tgot("oefen0");
   if(!G.practice && G.level.id==="toets-zuid" && nMiss===0) tgot("z-perfect");
+  if(!G.practice && G.level.write && nMiss===0) tgot("spell");
   if(!G.practice && G.level.toets && REGIONS[region].water && !G.missed.some(m=>WATER.some(w=>w.name===m))) tgot("maas");
   if((G.fast||0) >= 10) tgot("snel");
   if(G.score >= 10000) tgot("punten");
@@ -1095,7 +1185,7 @@ function finish(){
 }
 
 function drawEnd(){
-  const {won, stars, trophyNow, newT, right, rec, newDone, newTier} = G.end;
+  const {won, stars, trophyNow, newT, right, rec, newDone, newTier} = G.end; card.classList.remove("writing");
   const title = t(!won ? "e_over" : isZen() ? (stars===3 ? "e_zen3" : "e_zen") : isCrew() ? (stars===3 ? "e_mission3" : "e_mission") : stars===3 ? "e_master" : stars===2 ? "e_almost" : "e_passed");
   card.innerHTML = `
     ${trophyNow?`<div class="bigtrophy">${TROPHY_SVG()}<p class="q">${t("bigTrophy")}</p><p style="margin:4px 0 0;font-weight:900;font-size:17px">${t("bigTrophyText")}</p></div>`:""}
@@ -1298,15 +1388,16 @@ function builder(){
 function menu(){
   building = false; svg.classList.remove("building"); Object.values(provEl).forEach(p => p.classList.remove("pick"));
   studying = false; svg.classList.remove("nonames");
-  G = null; hud.hidden = true; setView(REGIONS[region].view); clearFx(); card.classList.add("menu"); svg.classList.remove("clickable");
+  G = null; hud.hidden = true; setView(REGIONS[region].view); clearFx(); card.classList.add("menu"); card.classList.remove("writing"); svg.classList.remove("clickable");
   showDots([]);
   shownDots = [];
   LEVELS[0] = toetsLevel();
   Object.entries(provEl).forEach(([n,p]) => p.classList.toggle("region", REGIONS[region].provs.includes(n)));
   const btn = ([l,i]) => `<button class="lvl ${l.boss?"boss":""} ${l.toets?"toets":""} ${done[l.id]?"done":""}" type="button" data-i="${i}">
-      <span class="n">${l.boss?"★":l.toets?"!":i}</span><span><strong>${l.title}${done[l.id]?` <span class="tick">✓</span>`:""}</strong><small>${l.desc}</small></span>
+      <span class="n">${l.boss?"★":l.toets?"!":l.write?"✎":i}</span><span><strong>${l.title}${done[l.id]?` <span class="tick">✓</span>`:""}</strong><small>${l.desc}</small></span>
       <span class="best">${best[l.id]?t("record")+"<br>"+best[l.id]:""}</span></button>`;
-  const all = LEVELS.map((l,i)=>[l,i]), todo = all.filter(([l])=>!done[l.id]), fin = all.filter(([l])=>done[l.id]);
+  const all = LEVELS.map((l,i)=>[l,i]); all.splice(1, 0, all.pop());
+  const todo = all.filter(([l])=>!done[l.id]), fin = all.filter(([l])=>done[l.id]);
   const nDone = REGION_KEYS().filter(k=>done[k]).length, won = nDone===4;
   card.innerHTML = `<div class="trophyrow ${won?"won":""}">${TROPHY_SVG(won?"":"locked")}<div><b>${won?t("trophyWon"):t("trophyCount", nDone)}</b>
       <small>${t(won?"allFour":"winHint")}</small>
@@ -1338,6 +1429,13 @@ document.getElementById("langBtn").onclick = () => { lang = lang==="en" ? "nl" :
   else if(G){ if(!G.lock) next(true); }
   else if(card.querySelector(".shelf")) cabinet();
   else menu(); };
+
+(() => { const wrapEl = document.querySelector(".wrap"), vv = window.visualViewport;
+  const fit = () => { const typing = document.activeElement && document.activeElement.id==="wIn" && innerWidth<=760;
+    wrapEl.classList.toggle("typing", !!typing);
+    wrapEl.style.height = typing && vv ? vv.height+"px" : ""; if(typing) window.scrollTo(0,0); };
+  if(vv) vv.addEventListener("resize", fit);
+  document.addEventListener("focusin", fit); document.addEventListener("focusout", () => setTimeout(fit, 60)); })();
 applyTheme();
 syncTrophies();
 menu();
