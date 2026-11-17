@@ -474,8 +474,8 @@ const T = {
     helpedBack:" Met hulp: hij komt straks nog een keer, zonder hulp.", skipped:"Overgeslagen: hij komt aan het eind terug.",
     boostOn: n => `⚡ Puntenboost: nog ${n} keer dubbele punten!`, tokenEarned: n => `+1 Topo Token 🪙 (je hebt er nu ${n})`,
     lv_write:"Schrijf de namen", lvd_write:() => `Typ de naam van de gele plek. Precies goed schrijven: hoofdletters, ' en - tellen mee! ${WRITE_N} vragen.`,
-    r_caps1: w => `Een plaatsnaam begint altijd met een hoofdletter: ${w}.`, r_capsDash: w => `Na het streepje begint het tweede deel ook met een hoofdletter: ${w}.`,
-    r_capsS: w => `'s schrijf je met een kleine s, daarna een hoofdletter H: ${w}.`, r_capsIn: w => `Let op de hoofdletters: ${w}.`,
+    r_caps1: w => `Een plaatsnaam begint altijd met een hoofdletter: ${w}.`, r_capsDash: w => `Allebei de delen beginnen met een hoofdletter, ook na het streepje: ${w}.`,
+    r_capsS: w => `'s schrijf je met een kleine s, en daarna komt een hoofdletter H: ${w}.`, r_capsIn: w => `Let op de hoofdletters: ${w}.`,
     r_apos: w => `Vergeet de apostrof niet: ${w} begint met 's.`, r_noApos:"In deze naam staat geen apostrof.",
     r_dash: w => `Tussen de twee delen staat een streepje, zonder spaties: ${w}.`, r_noDash:"In deze naam staat geen streepje.",
     writeQ: w => `Schrijf de naam van ${w==="water"||w==="isl"?"het":"de"} <em>gele</em> ${T.nl["w_"+w]}.`,
@@ -539,8 +539,8 @@ const T = {
     helpedBack:" With help: it comes back later, without help.", skipped:"Skipped: it comes back at the end.",
     boostOn: n => `⚡ Points boost: ${n} more times double points!`, tokenEarned: n => `+1 Topo Token 🪙 (you have ${n} now)`,
     lv_write:"Write the names", lvd_write:() => `Type the name of the yellow place. Write it exactly right: capitals, ' and - count! ${WRITE_N} questions.`,
-    r_caps1: w => `A place name always starts with a capital letter: ${w}.`, r_capsDash: w => `After the dash, the second part starts with a capital letter too: ${w}.`,
-    r_capsS: w => `'s is written with a small s, then a capital H: ${w}.`, r_capsIn: w => `Watch the capital letters: ${w}.`,
+    r_caps1: w => `A place name always starts with a capital letter: ${w}.`, r_capsDash: w => `Both parts start with a capital letter, also after the dash: ${w}.`,
+    r_capsS: w => `'s is written with a small s, and then comes a capital H: ${w}.`, r_capsIn: w => `Watch the capital letters: ${w}.`,
     r_apos: w => `Don't forget the apostrophe: ${w} starts with 's.`, r_noApos:"This name has no apostrophe.",
     r_dash: w => `There is a dash between the two parts, with no spaces: ${w}.`, r_noDash:"This name has no dash.",
     writeQ: w => `Write the name of the <em>yellow</em> ${T.en["w_"+w]}.`,
@@ -1100,7 +1100,7 @@ function spellRules(given, want){
   else if(!want.includes("-") && g.includes("-")) out.push(t("r_noDash"));
   const bare = x => x.replace(/^'s-?/i, ""), gp = bare(g).split(/[- ]+/), wp = bare(want).split("-");
   const capOff = gp.length===wp.length && wp.some((w,i) => gp[i] && gp[i][0] && gp[i][0]!==w[0] && gp[i][0].toLowerCase()===w[0].toLowerCase());
-  const sOff = want.startsWith("'s") && /^'S/.test(g);
+  const sOff = want.startsWith("'s") && (/^'S/.test(g) || capOff);
   if(sOff) out.push(t("r_capsS", want));
   else if(capOff) out.push(t(wp.length>1 ? "r_capsDash" : "r_caps1", want));
   else if(g!==want && g.toLowerCase()===want.toLowerCase()) out.push(t("r_capsIn", want));
