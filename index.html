@@ -322,6 +322,29 @@ body.atlas{--dot:#d1263b;--hit:#f2b705;background:#eef3f7}
 .ripple{position:absolute;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:3px solid #8a6fc9;pointer-events:none;z-index:5;animation:ripple 1.4s ease-out forwards}
 @keyframes ripple{to{transform:scale(9);opacity:0}}
 
+.pet{position:absolute;left:8px;bottom:6px;z-index:7;pointer-events:none;font-size:34px;line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35));animation:petwalk 16s ease-in-out infinite alternate}
+.pet span{display:block;animation:petbob .5s ease-in-out infinite alternate}
+.pet.cheer span{animation:petjump .6s ease-out}
+.pet i{position:absolute;left:70%;top:-20px;font-style:normal;font-size:22px;animation:up .9s ease-out forwards}
+@keyframes petwalk{to{left:calc(100% - 48px)}}
+@keyframes petbob{to{transform:translateY(-3px)}}
+@keyframes petjump{40%{transform:translateY(-28px) scale(1.15)}}
+
+body.goud{--hit:#e0a800;--dot:#c0392b;background:radial-gradient(circle at 30% 15%,#fff7d6,#f1dc95 60%,#e3c36d)}
+.goud h1 span{color:#b8860b;text-shadow:0 0 10px rgba(255,215,0,.85)!important}
+.goud .board{background:radial-gradient(circle at 50% 40%,#3a5f8a,#1f3a5c);border:4px solid #d4af37;border-radius:14px;box-shadow:0 0 0 2px #8a6d1d,0 0 24px rgba(212,175,55,.6);animation:goldglow 4s ease-in-out infinite}
+@keyframes goldglow{50%{box-shadow:0 0 0 2px #8a6d1d,0 0 42px rgba(255,215,0,.9)}}
+.goud #provs{animation:goldshine 3s ease-in-out infinite}
+@keyframes goldshine{50%{filter:brightness(1.18) saturate(1.15)}}
+.goud .prov.prov{fill:#b8901f;stroke:#4d3908;stroke-width:1.5} .goud .prov.prov:nth-child(odd){fill:#9a7618}
+.goud .prov.prov.region{stroke:#fff3c4;stroke-width:3}
+.goud .prov.prov.hl{fill:#fff35c!important;stroke:#fff;stroke-width:4}
+.goud .dot.hl{fill:#fff35c;stroke:#000;stroke-width:3} .goud .ring:not(.good):not(.bad){stroke:#fff}
+.goud .sealabel{fill:#d4af37}
+.goud .stat,.goud .card{border:2px solid #d4af37;background:rgba(255,252,238,.95)}
+.goud .big:not(.ghost){background:linear-gradient(#f7d774,#d4af37);color:#3d2c00;box-shadow:0 3px 0 #8a6d1d}
+.goud .tokchip{color:#b8860b;border-color:#d4af37}
+
 .wbox{display:flex;gap:8px}
 .wbox input{flex:1;min-width:0;box-sizing:border-box;font:800 22px var(--body);color:#1b1b1b;background:#fff;border:3px solid #000;border-radius:0;padding:8px 12px;min-height:52px}
 .wbox input:focus{outline:3px solid var(--hit);outline-offset:1px}
@@ -453,7 +476,7 @@ const T = {
   nl:{
     langBtn:"Taal: NL", title:"Topo Kwest Nederland", mapLabel:"Kaart van Nederland met provincies",
     subCrew:"Elke provincie is een kamer van het ruimteschip!", subBlok:"Elke provincie is van een ander blok!", subZen:"Adem in, adem uit. Rustig leren.", subAtlas:"Een gewone kaart, net als op je toets.",
-    theme: th => "Thema: " + ({atlas:"Standaard", crew:"Ruimteschip", blok:"Blokken", zen:"Meditatie"}[th]), sound: on => "Geluid: " + (on ? "aan" : "uit"),
+    theme: th => "Thema: " + ({atlas:"Standaard", crew:"Ruimteschip", blok:"Blokken", zen:"Meditatie", goud:"Goud"}[th]), sound: on => "Geluid: " + (on ? "aan" : "uit"),
     e_zen3:"Helemaal zen!", e_zen:"Goed gedaan", bouwZen:"🎨 Kleuren kiezen", zenTitle:"Kleuren kiezen",
     zenPick: s => `${s}: welke kleur wordt het?`, nowColor: c => `Nu: <b>${c}</b>. Tik op een andere kleur.`,
     zenNote:"Tik op de kaart op de provincie die een andere kleur moet krijgen.",
@@ -471,6 +494,11 @@ const T = {
     it_skip:"Overslaan", itd_skip:"Sla een vraag over. Hij komt aan het eind terug.",
     it_boost:"Puntenboost", itd_boost:"Je volgende 5 goede antwoorden tellen dubbel.",
     it_double:"Tokenverdubbelaar", itd_double:"De volgende ronde die je uitspeelt geeft 2 Topo Tokens in plaats van 1.",
+    it_peek:"Spiekkaart", itd_peek:"Kijk 5 seconden naar de kaart met alle namen. Telt als hulp: de vraag komt later terug.",
+    it_gold:"Gouden kaart", itd_gold:"Een glimmend gouden thema, voor altijd. Wissel met de Thema-knop.", bought:"Gekocht ✓",
+    peekOn:"🗺️ Spieken: 5 seconden!", subGold:"Een glimmende gouden kaart!",
+    petBtn:"🐾 Huisdieren", petTitle:"Huisdieren", petNote:"Je huisdier loopt over de kaart en juicht als je het goed hebt.",
+    pet_cat:"Poes", pet_dog:"Hond", pet_bunny:"Konijn", petNew:"Nog niet van jou.", petOwn:"Van jou!", petOn:"Loopt nu op je kaart.", petPick:"Kies", petAway:"Wegzetten",
     tipFirst: (l, n) => `Tip: begint met <b>${l}</b> en heeft ${n} tekens.`, tipBlink:"Tip: kijk wat er knippert!",
     helpedBack:" Met hulp: hij komt straks nog een keer, zonder hulp.", skipped:"Overgeslagen: hij komt aan het eind terug.",
     boostOn: n => `⚡ Puntenboost: nog ${n} keer dubbele punten!`, tokenEarned: n => `+1 Topo Token 🪙 (je hebt er nu ${n})`, tokenEarned2: n => `+2 Topo Tokens 🪙🪙 Verdubbeld! (je hebt er nu ${n})`,
@@ -519,7 +547,7 @@ const T = {
   en:{
     langBtn:"Language: EN", title:"Topo Kwest Netherlands", mapLabel:"Map of the Netherlands with provinces",
     subCrew:"Every province is a room of the spaceship!", subBlok:"Every province is made of a different block!", subZen:"Breathe in, breathe out. Learn calmly.", subAtlas:"A normal map, just like on your test.",
-    theme: th => "Theme: " + ({atlas:"Standard", crew:"Spaceship", blok:"Blocks", zen:"Meditation"}[th]), sound: on => "Sound: " + (on ? "on" : "off"),
+    theme: th => "Theme: " + ({atlas:"Standard", crew:"Spaceship", blok:"Blocks", zen:"Meditation", goud:"Gold"}[th]), sound: on => "Sound: " + (on ? "on" : "off"),
     e_zen3:"Totally zen!", e_zen:"Well done", bouwZen:"🎨 Choose colours", zenTitle:"Choose colours",
     zenPick: s => `${s}: which colour will it be?`, nowColor: c => `Now: <b>${c}</b>. Tap a different colour.`,
     zenNote:"Tap the province on the map that should get a different colour.",
@@ -537,6 +565,11 @@ const T = {
     it_skip:"Skip", itd_skip:"Skip a question. It comes back at the end.",
     it_boost:"Points boost", itd_boost:"Your next 5 right answers count double.",
     it_double:"Token doubler", itd_double:"The next round you finish gives 2 Topo Tokens instead of 1.",
+    it_peek:"Peek map", itd_peek:"Look at the map with all the names for 5 seconds. Counts as help: the question comes back later.",
+    it_gold:"Golden map", itd_gold:"A shiny golden theme, forever. Switch with the Theme button.", bought:"Bought ✓",
+    peekOn:"🗺️ Peek: 5 seconds!", subGold:"A shiny golden map!",
+    petBtn:"🐾 Pets", petTitle:"Pets", petNote:"Your pet walks on the map and cheers when you get it right.",
+    pet_cat:"Cat", pet_dog:"Dog", pet_bunny:"Bunny", petNew:"Not yours yet.", petOwn:"Yours!", petOn:"Walking on your map now.", petPick:"Choose", petAway:"Put away",
     tipFirst: (l, n) => `Hint: starts with <b>${l}</b> and has ${n} characters.`, tipBlink:"Hint: look what's blinking!",
     helpedBack:" With help: it comes back later, without help.", skipped:"Skipped: it comes back at the end.",
     boostOn: n => `⚡ Points boost: ${n} more times double points!`, tokenEarned: n => `+1 Topo Token 🪙 (you have ${n} now)`, tokenEarned2: n => `+2 Topo Tokens 🪙🪙 Doubled! (you have ${n} now)`,
@@ -867,7 +900,7 @@ function strike(){
 }
 function explode(x, y, cols){
   const b=document.getElementById("board");
-  if(isZen() || isAtlas()){
+  if(isZen() || isAtlas() || isGold()){
     if(isAtlas()){ ding(); return; }
     chime(); if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     for(let i=0;i<2;i++) setTimeout(()=>{ const e=document.createElement("div"); e.className="ripple"; e.style.cssText=`left:${x}px;top:${y}px`; b.appendChild(e); setTimeout(()=>e.remove(),1500); }, i*350);
@@ -939,6 +972,7 @@ const isCrew = () => theme==="crew";
 const isZen = () => theme==="zen";
 const THEMES = ["atlas","crew","blok","zen"];
 const isAtlas = () => theme==="atlas";
+const isGold = () => theme==="goud";
 
 const ATLAS = {"Groningen":"#a5d6a7","Friesland":"#ffcc80","Drenthe":"#fff59d","Overijssel":"#ce93d8","Flevoland":"#ffab91",
   "Gelderland":"#c5e1a5","Utrecht":"#ef9a9a","Noord-Holland":"#b2dfdb","Zuid-Holland":"#ffcc80","Zeeland":"#b39ddb",
@@ -965,22 +999,22 @@ const ASTRO = (col, cls="astro") => `<svg class="${cls}" viewBox="0 0 40 52" ari
   <path d="M17 18q3 2.5 6 0" stroke="#000" stroke-width="1.2" fill="none"/><path d="M12 9q3-5 9-5" stroke="#fff" stroke-width="2" fill="none" opacity=".8"/></svg>`;
 function applyTheme(){
   document.body.classList.toggle("crew", isCrew());
-  document.body.classList.toggle("zen", isZen() || isAtlas());
-  document.body.classList.toggle("atlas", isAtlas());
-  document.getElementById("sub").textContent = t(isCrew() ? "subCrew" : isZen() ? "subZen" : isAtlas() ? "subAtlas" : "subBlok");
+  document.body.classList.toggle("zen", isZen() || isAtlas() || isGold());
+  document.body.classList.toggle("atlas", isAtlas()); document.body.classList.toggle("goud", isGold());
+  document.getElementById("sub").textContent = t(isCrew() ? "subCrew" : isZen() ? "subZen" : isAtlas() ? "subAtlas" : isGold() ? "subGold" : "subBlok");
   document.getElementById("hdrAstro").innerHTML = ASTRO(CREWCOLS.Rood);
   document.getElementById("themeBtn").textContent = t("theme", theme);
   document.getElementById("soundBtn").textContent = t("sound", soundOn);
   document.getElementById("langBtn").textContent = t("langBtn");
   document.documentElement.lang = lang; document.title = t("title"); svg.setAttribute("aria-label", t("mapLabel"));
-  applyBlocks(); showTokens();
+  applyBlocks(); showTokens(); showPet();
 }
 const blockCol = n => isCrew() || isZen() ?[CREWCOLS[colorOf(n)], "#ffffff", CREWCOLS[colorOf(n)]] : MATCOL[blockOf(n)];
 function applyBlocks(){
   Object.entries(provEl).forEach(([n,p]) => {
     p.style.setProperty("--crew", CREWCOLS[colorOf(n)]); p.style.setProperty("--atlas", ATLAS[n]);
     p.style.setProperty("--biome", `url(#${BIOME_ID(blockOf(n))})`);
-    const tt = p.querySelector("title"); if(tt) tt.textContent = isCrew() ? rN(colorOf(n)) : isZen() ? cN(colorOf(n)) : isAtlas() ? "" : bN(blockOf(n));
+    const tt = p.querySelector("title"); if(tt) tt.textContent = isCrew() ? rN(colorOf(n)) : isZen() ? cN(colorOf(n)) : isAtlas() || isGold() ? "" : bN(blockOf(n));
   });
 }
 const provEl = {};
@@ -1044,36 +1078,39 @@ const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.rand
 
 
 
-const SHOP = [{id:"tip", ic:"💡", price:1}, {id:"fifty", ic:"✂️", price:1}, {id:"skip", ic:"⏭️", price:1}, {id:"boost", ic:"⚡", price:2}, {id:"double", ic:"💰", price:5}];
+const SHOP = [{id:"tip", ic:"💡", price:1}, {id:"fifty", ic:"✂️", price:1}, {id:"skip", ic:"⏭️", price:1}, {id:"boost", ic:"⚡", price:2}, {id:"double", ic:"💰", price:5}, {id:"peek", ic:"🗺️", price:1}, {id:"gold", ic:"✨", price:8, once:true}];
 const tokens = () => { const n = load("topo-tokens"); return typeof n==="number" ? n : 3; };
 const setTokens = n => { save("topo-tokens", n); showTokens(); };
 const inv = () => load("topo-shop") || {};
 function showTokens(){ const c = document.getElementById("tokChip"); if(c){ c.textContent = "🪙 " + tokens(); c.setAttribute("aria-label", t("tokAria", tokens())); c.title = t("tokAria", tokens()); } }
 function shop(){
-  G = null; hud.hidden = true; card.classList.add("menu"); card.classList.remove("writing");
+  G = null; hud.hidden = true; card.classList.add("menu"); card.classList.remove("writing"); clearFx(); showDots([]);
   const have = inv(), n = tokens();
   card.innerHTML = `<div class="shop qnum">${t("shopTitle")}</div><p class="q">${t("shopHave", n)}</p>
     <p class="note">${t("shopEarn")} ${t("shopSafe")}</p>
-    ${SHOP.map(it => `<div class="shopitem"><span class="ic">${it.ic}</span><span><strong>${t("it_"+it.id)}</strong><small>${t("itd_"+it.id)}</small><small><b>${t("owned", have[it.id]||0)}</b></small></span>
-      <button class="opt" type="button" data-buy="${it.id}" ${n < it.price ? "disabled" : ""}>${t("buy", it.price)}</button></div>`).join("")}
+    ${SHOP.map(it => `<div class="shopitem"><span class="ic">${it.ic}</span><span><strong>${t("it_"+it.id)}</strong><small>${t("itd_"+it.id)}</small>${it.once ? "" : `<small><b>${t("owned", have[it.id]||0)}</b></small>`}</span>
+      <button class="opt" type="button" data-buy="${it.id}" ${n < it.price || (it.once && have[it.id]) ? "disabled" : ""}>${it.once && have[it.id] ? t("bought") : t("buy", it.price)}</button></div>`).join("")}
     <button class="big ghost" id="back" type="button">${t("back")}</button>`;
   card.querySelectorAll("[data-buy]").forEach(b => b.onclick = () => {
-    const it = SHOP.find(x => x.id===b.dataset.buy), h = inv(); if(tokens() < it.price) return;
-    setTokens(tokens() - it.price); h[it.id] = (h[it.id]||0) + 1; save("topo-shop", h); click(); shop(); });
+    const it = SHOP.find(x => x.id===b.dataset.buy), h = inv(); if(tokens() < it.price || (it.once && h[it.id])) return;
+    setTokens(tokens() - it.price); h[it.id] = (h[it.id]||0) + 1; save("topo-shop", h);
+    if(it.id==="gold"){ theme = "goud"; try{ localStorage.setItem("topo-theme", theme); }catch(e){} applyTheme(); }
+    click(); shop(); });
   document.getElementById("back").onclick = menu;
 }
 
 function helpBar(q){
-  const h = inv(), ok = id => id!=="double" && (h[id]||0) > 0 && (id!=="fifty" || q.type==="name");
+  const h = inv(), ok = id => id!=="double" && id!=="gold" && (h[id]||0) > 0 && (id!=="fifty" || q.type==="name");
   const items = SHOP.filter(it => ok(it.id)); if(!items.length) return "";
   return `<div class="helpbar">${items.map(it => `<button class="helpb" type="button" data-help="${it.id}">${it.ic} ${t("it_"+it.id)} (${h[it.id]})</button>`).join("")}</div>`;
 }
 function useHelp(id){
   if(!G || G.lock || G.i >= G.qs.length) return;
-  const q = G.qs[G.i], h = inv(); if(!(h[id] > 0)) return;
+  const q = G.qs[G.i], h = inv(); if(!(h[id] > 0)) return; if(id==="peek" && G.peeking) return;
   h[id]--; save("topo-shop", h);
   const fb = document.getElementById("fb"); fb.className = "feedback";
   if(id==="skip"){ G.qs.push({kind:q.kind, name:q.name, type:q.type, pool:q.pool}); G.i++; next(); document.getElementById("fb").textContent = t("skipped"); return; }
+  if(id==="peek"){ q.helped = true; fb.textContent = t("peekOn"); peek(); }
   if(id==="boost"){ G.boost = (G.boost||0) + 5; fb.textContent = t("boostOn", G.boost); }
   if(id==="tip"){ q.helped = true;
     if(q.type==="find"){ fb.textContent = t("tipBlink");
@@ -1084,6 +1121,48 @@ function useHelp(id){
     const wrong = shuffle([...card.querySelectorAll(".opt[data-o]:not(.gone)")].filter(b => b.dataset.o!==q.name));
     wrong.slice(0, Math.min(2, wrong.length - 1)).forEach(b => b.classList.add("gone")); }
   const bar = card.querySelector(".helpbar"); if(bar){ bar.outerHTML = helpBar(q); bindHelp(); }
+}
+
+function peek(){
+  const g = G, q = G.qs[G.i], u = 1/pxPerUnit(), grp = document.createElementNS(NS,"g");
+  const provs = q.kind==="prov" ? (q.pool.length ? q.pool : Object.keys(provEl)).map(x => typeof x==="string" ? x : x.name) : [];
+  const items = q.kind==="prov" ? provs.filter(n => provEl[n]).map(n => { const [x,y] = proj(...provCenter(n)); return {name:n, x, y, prov:true}; })
+    : shownDots.map(d => ({name:d.name, x:d.x, y:d.y}));
+  items.forEach(it => { const w = document.createElementNS(NS,"g"), tx = document.createElementNS(NS,"text");
+    w.setAttribute("class", "sb" + (it.prov ? " g-prov" : "")); tx.setAttribute("class","sname"); tx.setAttribute("font-size", (it.prov?17:14)*u);
+    tx.setAttribute("x", it.prov ? it.x : it.x + dotR() + 4*u); tx.setAttribute("y", it.y + 5*u); tx.setAttribute("text-anchor", it.prov ? "middle" : "start");
+    tx.textContent = it.name; w.appendChild(tx); grp.appendChild(w); });
+  gFx.appendChild(grp); g.peeking = true;
+  setTimeout(() => { grp.remove(); g.peeking = false; }, 5000);
+}
+
+const PETS = [{id:"cat", ic:"🐱", price:4}, {id:"dog", ic:"🐶", price:4}, {id:"bunny", ic:"🐰", price:4}];
+const pets = () => { const p = load("topo-pets"); return p && Array.isArray(p.own) ? p : {own:[], on:null}; };
+function showPet(){
+  let el = document.getElementById("pet"); const it = PETS.find(x => x.id===pets().on);
+  if(!it){ if(el) el.remove(); return; }
+  if(!el){ el = document.createElement("div"); el.id = "pet"; el.className = "pet"; el.setAttribute("aria-hidden","true"); el.innerHTML = "<span></span>"; document.getElementById("board").appendChild(el); }
+  el.firstChild.textContent = it.ic;
+}
+function petCheer(){
+  const el = document.getElementById("pet"); if(!el) return;
+  el.classList.remove("cheer"); void el.offsetWidth; el.classList.add("cheer");
+  const b = document.createElement("i"); b.textContent = "🎉"; el.appendChild(b); setTimeout(() => b.remove(), 900);
+}
+function petShop(){
+  G = null; hud.hidden = true; card.classList.add("menu"); card.classList.remove("writing"); clearFx(); showDots([]);
+  const p = pets(), n = tokens();
+  card.innerHTML = `<div class="petshop qnum">${t("petTitle")}</div><p class="q">${t("shopHave", n)}</p><p class="note">${t("petNote")}</p>
+    ${PETS.map(it => { const own = p.own.includes(it.id), on = p.on===it.id;
+      return `<div class="shopitem"><span class="ic">${it.ic}</span><span><strong>${t("pet_"+it.id)}</strong><small>${t(own ? (on ? "petOn" : "petOwn") : "petNew")}</small></span>
+      <button class="opt" type="button" data-pet="${it.id}" ${!own && n < it.price ? "disabled" : ""}>${own ? t(on ? "petAway" : "petPick") : t("buy", it.price)}</button></div>`; }).join("")}
+    <button class="big ghost" id="back" type="button">${t("back")}</button>`;
+  card.querySelectorAll("[data-pet]").forEach(b => b.onclick = () => {
+    const it = PETS.find(x => x.id===b.dataset.pet), p = pets();
+    if(!p.own.includes(it.id)){ if(tokens() < it.price) return; setTokens(tokens() - it.price); p.own.push(it.id); p.on = it.id; }
+    else p.on = p.on===it.id ? null : it.id;
+    save("topo-pets", p); click(); showPet(); petShop(); });
+  document.getElementById("back").onclick = menu;
 }
 const bindHelp = () => card.querySelectorAll("[data-help]").forEach(b => b.onclick = () => useHelp(b.dataset.help));
 
@@ -1235,7 +1314,7 @@ function answer(given, btn){
       if(lastEv && q.type==="find" && lastEv.clientX>=b.left && lastEv.clientX<=b.right){ px=lastEv.clientX; py=lastEv.clientY; }
       else if(tgt){ const r=tgt.getBoundingClientRect(); px=r.left+r.width/2; py=r.top+r.height/2; }
       if(px!=null) explode(px-b.left, py-b.top, q.kind==="prov" ? blockCol(q.name) : ["#d7263d","#ffffff","#8b8b8b"]); }
-    if(!isAtlas()) popAt("+"+pts, lastEv); setTimeout(ding, 180);
+    petCheer(); if(!isAtlas()) popAt("+"+pts, lastEv); setTimeout(ding, 180);
     if(q.kind==="prov") provEl[q.name].classList.add("good"); else ring(q.name,"good");
     if(btn) btn.classList.add("good");
   } else {
@@ -1519,7 +1598,8 @@ function menu(){
       <div class="pips">${Object.keys(REGIONS).map(k=>`<span class="${done["toets-"+k]?"on":""}">${done["toets-"+k]?"✓ ":""}${rl(k)}</span>`).join("")}</div></div></div>
     <button class="big ghost cabbtn" id="cab" type="button">${TROPHY_SVG("","goud")}${t("cabBtn", shownACH().filter(a=>trophies[a.id]).length, shownACH().length)}</button>
     <button class="big ghost" id="shopBtn" type="button">${t("shopBtn", tokens())}</button>
-    ${isAtlas() ? "" : `<button class="big ghost" id="bouw" type="button">${t(isCrew()?"bouwCrew":isZen()?"bouwZen":"bouwBlok")}</button>`}
+    <button class="big ghost" id="petBtn" type="button">${t("petBtn")}</button>
+    ${isAtlas() || isGold() ? "" : `<button class="big ghost" id="bouw" type="button">${t(isCrew()?"bouwCrew":isZen()?"bouwZen":"bouwBlok")}</button>`}
     <div class="qnum">${t("whichRegion")}</div>
     <div class="regions" role="group" aria-label="${t("regionAria")}">${Object.keys(REGIONS).map(k=>`<button class="reg" type="button" data-r="${k}" aria-pressed="${k===region}">${rl(k)}${done["toets-"+k]?" ✓":""}</button>`).join("")}</div>
     ${paused?`<button class="big" id="resume" type="button">${t("resume", paused.i+1, paused.qs.length)}</button>`:""}
@@ -1528,14 +1608,14 @@ function menu(){
     ${todo.length?"":`<div class="alldone">${t("allDone")}</div>`}
     <div class="levels">${all.map(btn).join("")}</div>`;
   card.querySelectorAll(".lvl").forEach(b => b.onclick = () => start(LEVELS[+b.dataset.i]));
-  document.getElementById("cab").onclick = cabinet; document.getElementById("shopBtn").onclick = shop;
+  document.getElementById("cab").onclick = cabinet; document.getElementById("shopBtn").onclick = shop; document.getElementById("petBtn").onclick = petShop;
   const bw = document.getElementById("bouw"); if(bw) bw.onclick = builder;
   const sb = document.getElementById("study"); if(sb) sb.onclick = study;
   const rb = document.getElementById("resume"); if(rb) rb.onclick = resumeGame;
   card.querySelectorAll(".reg").forEach(b => b.onclick = () => { region = b.dataset.r; try{ localStorage.setItem("topo-region", region); }catch(e){} menu(); });
 }
-document.getElementById("themeBtn").onclick = () => { theme = THEMES[(THEMES.indexOf(theme)+1) % THEMES.length]; try{ localStorage.setItem("topo-theme", theme); }catch(e){}
-  applyTheme(); if(building){ if(isAtlas()) menu(); else drawBuild(); } else if(card.querySelector(".shop")) shop(); else if(!G && !studying) menu(); };
+document.getElementById("themeBtn").onclick = () => { const TH = inv().gold > 0 ? [...THEMES, "goud"] : THEMES; theme = TH[(TH.indexOf(theme)+1) % TH.length]; try{ localStorage.setItem("topo-theme", theme); }catch(e){}
+  applyTheme(); if(building){ if(isAtlas() || isGold()) menu(); else drawBuild(); } else if(card.querySelector(".petshop")) petShop(); else if(card.querySelector(".shop")) shop(); else if(!G && !studying) menu(); };
 
 document.getElementById("langBtn").onclick = () => { lang = lang==="en" ? "nl" : "en"; try{ localStorage.setItem("topo-lang", lang); }catch(e){}
   applyTheme();
@@ -1544,7 +1624,7 @@ document.getElementById("langBtn").onclick = () => { lang = lang==="en" ? "nl" :
   else if(G && G.end) drawEnd();
   else if(G){ if(!G.lock) next(true); }
   else if(card.querySelector(".shelf")) cabinet();
-  else if(card.querySelector(".shop")) shop();
+  else if(card.querySelector(".petshop")) petShop(); else if(card.querySelector(".shop")) shop();
   else menu(); };
 
 (() => { const wrapEl = document.querySelector(".wrap"), vv = window.visualViewport;
@@ -1553,6 +1633,10 @@ document.getElementById("langBtn").onclick = () => { lang = lang==="en" ? "nl" :
     wrapEl.style.height = typing && vv ? vv.height+"px" : ""; if(typing) window.scrollTo(0,0); };
   if(vv) vv.addEventListener("resize", fit);
   document.addEventListener("focusin", fit); document.addEventListener("focusout", () => setTimeout(fit, 60)); })();
+
+if(!location.hostname.endsWith("github.io") && !load("topo-gift1")){ save("topo-tokens", tokens() + 5); save("topo-gift1", true); }
+if(!location.hostname.endsWith("github.io") && !load("topo-gift2")){ save("topo-tokens", tokens() + 1); save("topo-gift2", true); }
+if(!location.hostname.endsWith("github.io") && !load("topo-gift3")){ save("topo-tokens", tokens() + 2); save("topo-gift3", true); }
 applyTheme();
 syncTrophies();
 menu();
