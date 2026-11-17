@@ -540,7 +540,7 @@ const T = {
     sub_goud:"Een glimmende gouden kaart!", sub_diamant:"Fonkel fonkel, diamanten kaart!", sub_regenboog:"Een kaart in alle kleuren!", sub_lava:"Pas op, de zee is lava!",
     peekOn:"🗺️ Spieken: 5 seconden!", subGold:"Een glimmende gouden kaart!",
     petBtn:"🐾 Huisdieren", petTitle:"Huisdieren", petNote:"Je huisdier loopt over de kaart en juicht als je het goed hebt.",
-    pet_cat:"Poes", pet_dog:"Hond", pet_bunny:"Konijn", petNew:"Nog niet van jou.", petOwn:"Van jou!", petOn:"Loopt nu op je kaart.", petPick:"Kies", petAway:"Wegzetten",
+    pet_cat:"Poes", pet_dog:"Hond", pet_bunny:"Konijn", pet_hamster:"Hamster", pet_bird:"Vogeltje", pet_fish:"Visje", pet_turtle:"Schildpad", pet_pig:"Varkentje", pet_horse:"Paard", petNew:"Nog niet van jou.", petOwn:"Van jou!", petOn:"Loopt nu op je kaart.", petPick:"Kies", petAway:"Wegzetten",
     tipFirst: (l, n) => `Tip: begint met <b>${l}</b> en heeft ${n} tekens.`, tipBlink:"Tip: kijk wat er knippert!",
     helpedBack:" Met hulp: hij komt straks nog een keer, zonder hulp.", skipped:"Overgeslagen: hij komt aan het eind terug.",
     boostOn: n => `⚡ Puntenboost: nog ${n} keer dubbele punten!`, tokenEarned: n => `+1 Topo Token 🪙 (je hebt er nu ${n})`, tokenEarned2: n => `+2 Topo Tokens 🪙🪙 Verdubbeld! (je hebt er nu ${n})`,
@@ -615,7 +615,7 @@ const T = {
     sub_goud:"A shiny golden map!", sub_diamant:"Twinkle twinkle, diamond map!", sub_regenboog:"A map in every colour!", sub_lava:"Watch out, the sea is lava!",
     peekOn:"🗺️ Peek: 5 seconds!", subGold:"A shiny golden map!",
     petBtn:"🐾 Pets", petTitle:"Pets", petNote:"Your pet walks on the map and cheers when you get it right.",
-    pet_cat:"Cat", pet_dog:"Dog", pet_bunny:"Bunny", petNew:"Not yours yet.", petOwn:"Yours!", petOn:"Walking on your map now.", petPick:"Choose", petAway:"Put away",
+    pet_cat:"Cat", pet_dog:"Dog", pet_bunny:"Bunny", pet_hamster:"Hamster", pet_bird:"Bird", pet_fish:"Fish", pet_turtle:"Turtle", pet_pig:"Pig", pet_horse:"Horse", petNew:"Not yours yet.", petOwn:"Yours!", petOn:"Walking on your map now.", petPick:"Choose", petAway:"Put away",
     tipFirst: (l, n) => `Hint: starts with <b>${l}</b> and has ${n} characters.`, tipBlink:"Hint: look what's blinking!",
     helpedBack:" With help: it comes back later, without help.", skipped:"Skipped: it comes back at the end.",
     boostOn: n => `⚡ Points boost: ${n} more times double points!`, tokenEarned: n => `+1 Topo Token 🪙 (you have ${n} now)`, tokenEarned2: n => `+2 Topo Tokens 🪙🪙 Doubled! (you have ${n} now)`,
@@ -1185,7 +1185,8 @@ function peek(){
   setTimeout(() => { grp.remove(); g.peeking = false; }, 5000);
 }
 
-const PETS = [{id:"cat", ic:"🐱", price:4}, {id:"dog", ic:"🐶", price:4}, {id:"bunny", ic:"🐰", price:4}];
+const PETS = [{id:"cat", ic:"🐱", price:4}, {id:"dog", ic:"🐶", price:4}, {id:"bunny", ic:"🐰", price:4},
+  {id:"hamster", ic:"🐹", price:4}, {id:"bird", ic:"🐦", price:4}, {id:"fish", ic:"🐟", price:4}, {id:"turtle", ic:"🐢", price:4}, {id:"pig", ic:"🐷", price:5}, {id:"horse", ic:"🐴", price:6}];
 const pets = () => { const p = load("topo-pets"); return p && Array.isArray(p.own) ? p : {own:[], on:null}; };
 function showPet(){
   let el = document.getElementById("pet"); const it = PETS.find(x => x.id===pets().on);
