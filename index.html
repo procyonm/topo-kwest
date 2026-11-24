@@ -420,6 +420,11 @@ body.lava{--hit:#ffe14d;--dot:#ffffff;background:radial-gradient(circle at 50% 1
   .wrap.typing header,.wrap.typing .hud{display:none}
   .wrap.typing .panel{max-height:none}
 }
+
+.giftbox{font-size:72px;line-height:1;text-align:center}
+.giftbox.ready{animation:giftwiggle .9s ease-in-out infinite}
+@keyframes giftwiggle{25%{transform:rotate(-8deg) scale(1.05)}75%{transform:rotate(8deg) scale(1.05)}}
+.toast .giftic{font-style:normal;font-size:34px}
 </style>
 
 <div class="wrap">
@@ -631,7 +636,7 @@ const T = {
     it_lava:"Lavakaart", itd_lava:"Gloeiende lava rond donkere rotsen. De laatste kaart!",
     sub_goud:"Een glimmende gouden kaart!", sub_diamant:"Fonkel fonkel, diamanten kaart!", sub_regenboog:"Een kaart in alle kleuren!", sub_lava:"Pas op, de zee is lava!",
     peekOn:"🗺️ Spieken: 5 seconden!", subGold:"Een glimmende gouden kaart!",
-    petBtn:"🐾 Huisdieren", petTitle:"Huisdieren", petNote:"Je huisdier loopt over de kaart en juicht als je het goed hebt.",
+    petBtn:"🐾 Huisdieren", questBtn:"🎁 Dagelijkse quest", questBtnReady:"🎁 Open je cadeau!", questTitle:"Quest van vandaag", q_missers:"Speel een ronde 'Oefen mijn missers'", q_rondes2:"Speel 2 rondes helemaal uit", q_rij5:"Geef 5 goede antwoorden op rij", q_spelling:"Speel 'Schrijf de namen' zonder één spelfout", questProgress:(n, m) => `Bezig: ${n} van ${m}.`, questReady:"Quest klaar! Je cadeau wacht op je.", questTomorrow:"Cadeau geopend. Morgen is er een nieuwe quest!", questPrize: n => `In de doos: ${n} Topo Token${n===1?"":"s"}, een helper, en als je geluk hebt een magisch huisdier.`, questOpen:"Open je cadeau", questDoneToast:"Quest klaar!", questMagic:"Magisch huisdier!", pet_ghost:"Spookje", pet_unicorn:"Eenhoorn", pet_dragon:"Draak", pet_alien:"Alien", pet_robot:"Robot", pet_fairy:"Fee", pet_mermaid:"Zeemeermin", pet_genie:"Geest uit de lamp", scoreBtn:"🏅 Topscores", scoreTitle:"Topscores", scoreSum: n => `Al je topscores samen: <b>${n}</b> punten.`, scoreNote: p => `Ruil ${p} punten voor 1 Topo Token. De punten gaan van je hoogste topscore af.`, scoreNone:"Nog geen topscores. Speel een ronde!", scoreSwap:"1 Topo Token", scoreBuy: p => `Ruil · ${p} punten`, petTitle:"Huisdieren", petNote:"Je huisdier loopt over de kaart en juicht als je het goed hebt.",
     pet_cat:"Poes", pet_dog:"Hond", pet_bunny:"Konijn", pet_hamster:"Hamster", pet_bird:"Vogeltje", pet_fish:"Visje", pet_turtle:"Schildpad", pet_pig:"Varkentje", pet_horse:"Paard", pet_fox:"Vos", pet_axolotl:"Axolotl", petNew:"Nog niet van jou.", petOwn:"Van jou!", petOn:"Loopt nu op je kaart.", petPick:"Kies", petAway:"Wegzetten",
     tipFirst: (l, n) => `Tip: begint met <b>${l}</b> en heeft ${n} tekens.`, tipBlink:"Tip: kijk wat er knippert!",
     helpedBack:" Met hulp: hij komt straks nog een keer, zonder hulp.", skipped:"Overgeslagen: hij komt aan het eind terug.",
@@ -706,7 +711,7 @@ const T = {
     it_lava:"Lava map", itd_lava:"Glowing lava around dark rocks. The last map!",
     sub_goud:"A shiny golden map!", sub_diamant:"Twinkle twinkle, diamond map!", sub_regenboog:"A map in every colour!", sub_lava:"Watch out, the sea is lava!",
     peekOn:"🗺️ Peek: 5 seconds!", subGold:"A shiny golden map!",
-    petBtn:"🐾 Pets", petTitle:"Pets", petNote:"Your pet walks on the map and cheers when you get it right.",
+    petBtn:"🐾 Pets", questBtn:"🎁 Daily quest", questBtnReady:"🎁 Open your gift!", questTitle:"Today's quest", q_missers:"Play a 'Practise my misses' round", q_rondes2:"Finish 2 whole rounds", q_rij5:"Give 5 right answers in a row", q_spelling:"Play 'Write the names' without a single spelling mistake", questProgress:(n, m) => `Progress: ${n} of ${m}.`, questReady:"Quest done! Your gift is waiting.", questTomorrow:"Gift opened. A new quest comes tomorrow!", questPrize: n => `In the box: ${n} Topo Token${n===1?"":"s"}, a helper, and if you are lucky a magical pet.`, questOpen:"Open your gift", questDoneToast:"Quest done!", questMagic:"Magical pet!", pet_ghost:"Ghost", pet_unicorn:"Unicorn", pet_dragon:"Dragon", pet_alien:"Alien", pet_robot:"Robot", pet_fairy:"Fairy", pet_mermaid:"Mermaid", pet_genie:"Genie", scoreBtn:"🏅 High scores", scoreTitle:"High scores", scoreSum: n => `All your high scores together: <b>${n}</b> points.`, scoreNote: p => `Swap ${p} points for 1 Topo Token. The points come off your highest score.`, scoreNone:"No high scores yet. Play a round!", scoreSwap:"1 Topo Token", scoreBuy: p => `Swap · ${p} points`, petTitle:"Pets", petNote:"Your pet walks on the map and cheers when you get it right.",
     pet_cat:"Cat", pet_dog:"Dog", pet_bunny:"Bunny", pet_hamster:"Hamster", pet_bird:"Bird", pet_fish:"Fish", pet_turtle:"Turtle", pet_pig:"Pig", pet_horse:"Horse", pet_fox:"Fox", pet_axolotl:"Axolotl", petNew:"Not yours yet.", petOwn:"Yours!", petOn:"Walking on your map now.", petPick:"Choose", petAway:"Put away",
     tipFirst: (l, n) => `Hint: starts with <b>${l}</b> and has ${n} characters.`, tipBlink:"Hint: look what's blinking!",
     helpedBack:" With help: it comes back later, without help.", skipped:"Skipped: it comes back at the end.",
@@ -930,7 +935,7 @@ function builder(){
 }
 
 document.getElementById("themeBtn").onclick = () => { const TH = [...THEMES, ...MAPS.filter(m => inv()[m.id] > 0).map(m => m.theme)]; theme = TH[(TH.indexOf(theme)+1) % TH.length]; try{ localStorage.setItem("topo-theme", theme); }catch(e){}
-  applyTheme(); if(building){ if(isAtlas() || isGold()) menu(); else drawBuild(); } else if(card.querySelector(".petshop")) petShop(); else if(card.querySelector(".shop")) shop(); else if(!G && !studying) menu(); };
+  applyTheme(); if(building){ if(isAtlas() || isGold()) menu(); else drawBuild(); } else if(card.querySelector(".questroom")) questRoom(); else if(card.querySelector(".scores")) scoreRoom(); else if(card.querySelector(".petshop")) petShop(); else if(card.querySelector(".shop")) shop(); else if(!G && !studying) menu(); };
 
 const PATHS = {"Groningen": "M697.4,228.6 696.3,225.0 699.4,220.8 713.8,197.4 719.5,176.7 716.9,155.7 717.7,146.1 714.0,143.4 713.2,138.3 715.4,131.4 720.4,120.6 720.2,115.5 718.2,109.2 709.0,107.1 705.0,105.0 699.4,104.4 694.7,99.9 695.8,90.6 685.3,89.4 674.4,84.3 668.2,80.1 661.4,73.2 659.7,61.2 657.2,57.6 658.6,48.0 655.5,45.0 646.1,41.1 643.2,43.5 633.6,40.2 624.4,41.4 613.0,44.7 606.6,48.6 597.0,51.3 595.4,50.7 572.8,53.4 564.1,55.2 552.7,62.1 551.2,60.0 544.4,55.8 541.3,55.5 533.0,57.6 531.6,56.7 530.5,59.1 536.5,70.8 539.1,69.9 542.4,75.3 549.2,77.7 547.8,89.1 543.2,93.3 543.5,98.7 540.2,101.4 536.5,107.4 538.7,114.6 533.2,121.5 529.0,129.9 528.8,139.5 534.3,145.5 544.6,145.8 550.0,150.0 554.4,151.8 559.7,153.9 566.9,135.0 571.5,126.6 577.9,123.6 578.8,121.2 585.8,118.8 593.9,121.5 597.2,125.7 600.2,132.6 603.3,130.8 604.6,136.2 610.3,140.4 613.2,148.2 624.2,143.7 632.0,144.3 668.7,182.1 683.3,202.5 688.8,205.2 683.1,218.1 687.7,218.1 693.6,226.5 697.4,228.6ZM589.3,14.7 586.0,13.8 581.2,18.3 585.8,21.9 589.5,18.6 589.3,14.7Z", "Friesland": "M342.0,91.2 335.9,90.0 337.0,94.8 342.0,91.2ZM331.0,89.7 324.4,87.6 319.2,89.4 305.4,98.7 300.3,103.5 285.7,113.4 284.1,117.6 288.5,118.8 290.5,115.5 297.7,115.2 308.7,105.3 307.4,100.5 318.7,95.7 324.2,91.8 331.0,89.7ZM531.6,56.7 529.0,55.5 522.0,58.8 513.9,57.6 499.4,59.1 484.1,63.6 475.9,62.7 470.7,64.8 455.8,73.2 451.6,74.1 437.6,81.6 420.5,90.0 415.9,94.5 409.5,102.9 401.4,107.7 395.1,114.0 389.8,125.4 386.9,143.4 382.3,147.6 382.1,151.5 376.8,156.6 366.5,159.9 343.1,180.0 343.3,180.3 367.2,159.9 375.8,157.8 381.5,152.7 384.8,161.1 381.7,163.5 387.6,174.0 385.6,179.1 388.5,190.8 386.3,198.3 387.4,207.0 380.8,210.3 378.2,214.8 379.9,217.8 385.8,222.9 390.9,225.6 396.1,223.5 404.5,226.2 412.8,230.1 416.8,229.8 420.1,225.3 426.2,224.7 431.2,222.0 433.6,226.8 438.5,226.2 443.7,228.6 445.9,226.8 450.3,228.0 458.8,237.9 463.4,234.9 463.4,235.2 467.8,238.5 473.7,239.7 477.7,237.6 482.5,232.8 483.6,229.5 491.3,227.4 495.9,234.9 506.2,232.8 507.5,232.2 506.2,228.9 506.8,228.6 511.3,228.3 518.5,223.8 534.5,212.7 539.1,206.1 543.7,201.6 552.2,202.5 557.7,208.2 568.7,200.1 575.2,188.4 563.2,169.8 564.1,159.9 552.5,155.7 554.4,151.8 550.0,150.0 544.6,145.8 534.3,145.5 528.8,139.5 529.0,129.9 533.2,121.5 538.7,114.6 536.5,107.4 540.2,101.4 543.5,98.7 543.2,93.3 547.8,89.1 549.2,77.7 543.2,75.6 537.1,77.4 536.5,73.8 532.7,74.1 526.2,69.3 525.0,62.4 526.2,57.6 531.6,56.7ZM412.4,48.3 403.6,46.8 381.7,53.1 358.7,58.8 349.5,61.5 342.9,69.0 340.3,75.0 347.7,75.6 353.2,70.8 359.8,68.1 366.5,69.0 378.2,63.6 383.2,59.4 397.0,58.5 400.1,54.9 412.1,50.1 412.4,48.3ZM447.0,41.4 440.4,41.4 435.4,38.7 432.5,39.0 425.8,44.1 425.8,48.0 430.8,51.9 437.6,52.5 441.8,51.0 446.8,47.1 460.6,48.6 476.4,44.7 483.8,39.6 454.3,42.0 447.0,41.4ZM566.1,27.9 559.9,25.2 549.6,27.3 538.6,28.5 524.0,30.9 518.3,35.1 517.6,41.1 526.1,38.4 532.7,38.4 542.8,36.6 546.8,33.3 557.1,29.7 558.6,28.2 566.1,27.9Z", "Drenthe": "M697.4,228.6 693.6,226.5 687.7,218.1 683.1,218.1 688.8,205.2 683.3,202.5 668.7,182.1 632.0,144.3 624.2,143.7 613.2,148.2 610.3,140.4 604.6,136.2 603.3,130.8 600.2,132.6 597.2,125.7 593.9,121.5 585.8,118.8 578.8,121.2 577.9,123.6 571.5,126.6 566.9,135.0 559.7,153.9 554.4,151.8 552.5,155.7 564.1,159.9 563.2,169.8 575.2,188.4 568.7,200.1 557.7,208.2 552.2,202.5 543.7,201.6 539.1,206.1 534.5,212.7 518.5,223.8 524.4,231.3 523.9,231.6 529.0,235.8 533.6,241.8 525.1,251.1 518.5,255.0 520.9,260.7 522.7,265.2 526.4,276.0 530.1,277.5 533.6,274.5 542.1,277.2 546.7,280.5 555.8,279.0 556.4,282.0 563.4,287.1 567.1,296.4 571.1,293.7 579.7,295.8 581.8,292.8 591.9,295.8 591.0,286.2 598.1,280.2 609.5,277.8 626.6,285.3 627.0,291.6 632.9,286.5 639.3,284.4 647.6,285.6 661.4,284.7 665.4,288.0 669.1,288.6 675.7,286.2 688.0,290.1 690.4,286.8 692.1,263.1 693.6,237.0 697.4,228.6Z", "Overijssel": "M524.4,231.3 518.5,223.8 511.3,228.3 506.8,228.6 506.2,228.9 507.5,232.2 506.2,232.8 495.9,234.9 491.3,227.4 483.6,229.5 482.5,232.8 477.7,237.6 473.7,239.7 467.8,238.5 463.4,235.2 463.4,234.9 458.8,237.9 463.2,243.6 468.9,244.5 474.4,248.1 482.1,254.7 486.0,265.5 490.0,271.8 484.3,277.2 493.3,282.6 499.9,287.1 493.9,293.1 488.7,292.5 483.8,295.8 475.9,294.9 467.6,296.7 465.0,303.9 470.3,316.2 470.2,316.8 471.3,323.7 471.4,324.0 471.8,324.3 475.7,324.9 479.9,330.9 482.8,337.8 487.4,334.8 490.0,337.2 497.9,328.8 501.6,327.0 506.4,330.0 509.5,335.4 515.2,340.2 515.8,347.1 518.3,350.1 516.9,357.6 520.4,360.3 519.3,365.7 511.5,368.4 509.5,383.4 511.9,389.4 515.0,389.7 517.0,396.6 520.4,401.7 519.3,404.7 523.7,411.6 530.1,409.8 536.4,412.2 558.8,411.9 558.6,409.2 566.7,406.2 572.9,407.4 575.3,413.1 584.5,425.1 587.7,426.9 591.7,425.7 598.5,426.9 604.9,425.4 609.0,431.1 615.1,427.8 619.8,430.2 620.4,437.1 618.4,441.0 628.1,444.6 636.4,444.3 653.7,444.0 657.0,440.1 658.6,433.2 664.9,426.6 671.3,425.7 678.3,411.9 683.8,412.5 691.5,409.5 692.5,407.7 688.0,403.2 685.5,396.6 685.1,392.4 689.2,384.0 690.6,378.6 693.6,374.4 693.6,368.1 691.2,360.3 686.9,359.1 682.3,351.3 679.2,340.5 676.3,340.2 673.3,346.5 669.7,349.5 655.0,344.7 653.5,342.0 639.0,342.0 634.9,340.8 624.8,334.2 626.1,323.7 621.7,314.1 628.1,315.3 629.9,311.1 634.9,312.3 637.5,310.8 628.7,303.3 630.1,295.5 627.0,291.6 626.6,285.3 609.5,277.8 598.1,280.2 591.0,286.2 591.9,295.8 581.8,292.8 579.7,295.8 571.1,293.7 567.1,296.4 563.4,287.1 556.4,282.0 555.8,279.0 546.7,280.5 542.1,277.2 533.6,274.5 530.1,277.5 526.4,276.0 522.7,265.2 520.9,260.7 518.5,255.0 525.1,251.1 533.6,241.8 529.0,235.8 523.9,231.6 524.4,231.3Z", "Flevoland": "M458.8,237.9 450.3,228.0 445.9,226.8 443.7,228.6 433.9,231.6 422.0,251.1 421.6,281.1 425.8,284.7 432.5,294.9 428.1,298.5 415.4,302.4 404.7,313.2 396.4,315.0 395.0,319.5 391.3,318.6 393.5,313.2 398.8,309.0 396.4,301.8 386.1,285.3 379.0,277.8 377.7,276.6 368.1,272.4 365.4,272.7 365.4,273.0 368.7,273.0 378.8,277.8 385.9,285.3 396.2,301.8 398.5,308.4 394.6,311.7 393.1,313.5 391.1,318.6 390.9,321.0 392.6,326.7 385.2,332.7 382.1,333.9 360.0,349.5 342.4,360.0 336.3,365.1 338.0,382.2 338.1,382.5 346.4,379.5 353.2,379.8 365.0,384.9 370.1,389.1 370.3,389.1 370.9,388.8 386.5,404.1 399.0,401.1 399.2,400.8 409.9,397.5 414.3,383.7 414.3,379.8 411.5,375.0 416.3,369.6 425.5,371.4 425.7,371.1 427.5,366.0 434.1,360.6 445.0,355.2 449.9,355.5 459.1,348.3 462.8,342.9 468.5,332.1 470.2,324.6 470.2,316.8 470.3,316.2 462.1,306.9 451.6,305.4 433.0,300.9 434.5,296.1 465.6,296.1 489.8,288.3 493.3,282.6 484.3,277.2 490.0,271.8 486.0,265.5 482.1,254.7 474.4,248.1 468.9,244.5 463.2,243.6 458.8,237.9Z", "Gelderland": "M636.4,444.3 628.1,444.6 618.4,441.0 620.4,437.1 619.8,430.2 615.1,427.8 609.0,431.1 604.9,425.4 598.5,426.9 591.7,425.7 587.7,426.9 584.5,425.1 575.3,413.1 572.9,407.4 566.7,406.2 558.6,409.2 558.8,411.9 536.4,412.2 530.1,409.8 523.7,411.6 519.3,404.7 520.4,401.7 517.0,396.6 515.0,389.7 511.9,389.4 509.5,383.4 511.5,368.4 519.3,365.7 520.4,360.3 516.9,357.6 518.3,350.1 515.8,347.1 515.2,340.2 509.5,335.4 506.4,330.0 501.6,327.0 497.9,328.8 490.0,337.2 487.4,334.8 482.8,337.8 479.9,330.9 475.7,324.9 471.8,324.3 467.2,339.9 462.8,342.9 461.7,349.2 448.6,360.6 441.3,365.7 437.2,366.3 432.7,370.5 425.7,371.1 425.5,371.4 424.9,376.2 418.5,381.9 415.4,386.7 409.5,400.8 399.2,400.8 399.0,401.1 396.1,403.8 386.9,405.9 384.8,413.7 388.0,414.3 393.3,419.4 393.5,428.7 399.0,430.2 404.3,435.9 403.6,443.4 401.6,448.2 401.9,451.8 397.0,456.0 401.6,459.0 408.7,456.6 414.4,450.0 416.1,456.6 415.2,465.3 420.5,470.7 421.3,479.1 425.5,483.0 427.7,487.8 427.9,494.4 424.0,497.1 415.7,493.5 411.9,489.9 401.9,484.8 393.9,484.2 389.4,486.9 383.0,489.3 376.6,489.6 373.8,492.9 362.2,490.5 358.0,486.9 354.9,487.2 350.5,492.3 345.7,489.9 336.9,505.5 333.4,513.6 328.8,513.6 327.5,517.2 322.7,518.1 323.4,522.6 317.5,522.3 313.5,522.6 312.6,525.6 318.3,527.7 317.4,534.3 312.6,533.7 315.5,537.6 321.4,540.6 324.9,545.7 330.2,543.6 338.0,548.1 338.0,554.7 342.6,557.1 355.1,557.7 359.5,559.5 361.1,558.3 363.3,558.0 367.7,558.9 371.8,555.9 378.8,551.7 380.4,543.0 386.5,533.7 393.3,537.0 399.7,535.5 401.9,531.3 412.1,535.2 415.2,531.6 420.9,531.0 429.3,534.0 433.4,540.6 440.2,543.6 441.7,546.6 447.2,548.4 449.6,552.3 456.0,554.4 469.2,552.3 471.4,552.6 472.2,547.2 476.8,546.6 480.8,554.1 487.8,555.6 494.8,550.2 492.6,540.6 486.3,532.8 489.7,528.9 494.1,530.7 503.1,527.1 506.6,524.4 508.0,520.5 516.1,525.6 521.5,525.9 527.2,527.7 527.2,521.4 523.1,519.0 521.6,514.2 516.7,511.5 525.3,508.5 531.6,512.4 530.3,515.1 536.0,519.6 544.6,519.6 547.9,517.8 551.8,520.5 552.7,525.3 559.9,524.7 563.2,529.5 571.3,531.6 571.5,523.8 567.8,521.4 568.3,518.1 575.3,520.5 579.4,520.5 582.0,523.5 588.6,519.6 598.7,515.4 604.2,511.8 613.8,508.8 620.6,505.2 623.9,505.5 629.2,511.2 638.0,505.2 642.4,499.5 643.4,492.3 648.9,490.8 648.5,481.8 645.6,480.6 634.9,471.6 627.7,468.0 623.0,468.0 624.4,459.0 631.6,457.5 634.5,454.5 636.4,444.3Z", "Utrecht": "M324.5,394.5 320.5,395.4 316.6,389.4 312.0,393.3 309.6,393.0 305.4,396.6 299.0,396.6 299.5,399.6 296.2,404.1 288.7,404.1 283.7,408.9 278.4,411.9 274.9,411.9 278.4,419.4 283.9,426.0 292.7,431.4 289.4,433.2 289.6,438.3 285.9,438.9 281.9,436.5 278.2,438.0 274.3,443.4 280.4,447.9 280.6,457.5 288.3,461.1 281.1,465.0 276.4,475.8 284.5,474.6 286.3,478.2 279.1,480.0 284.3,487.5 286.8,489.6 290.2,498.6 300.1,495.6 301.4,501.3 304.5,505.2 311.7,509.4 312.4,514.8 317.0,515.7 317.5,522.3 323.4,522.6 322.7,518.1 327.5,517.2 328.8,513.6 333.4,513.6 336.9,505.5 345.7,489.9 350.5,492.3 354.9,487.2 358.0,486.9 362.2,490.5 373.8,492.9 376.6,489.6 383.0,489.3 389.4,486.9 393.9,484.2 401.9,484.8 411.9,489.9 415.7,493.5 424.0,497.1 427.9,494.4 427.7,487.8 425.5,483.0 421.3,479.1 420.5,470.7 415.2,465.3 416.1,456.6 414.4,450.0 408.7,456.6 401.6,459.0 397.0,456.0 401.9,451.8 401.6,448.2 403.6,443.4 404.3,435.9 399.0,430.2 393.5,428.7 393.3,419.4 388.0,414.3 384.8,413.7 386.9,405.9 378.2,399.0 368.8,396.6 361.5,395.4 353.6,412.5 352.5,418.2 348.1,426.6 346.4,426.6 343.8,426.3 334.8,425.7 321.0,430.2 318.8,416.1 320.3,410.7 323.1,408.9 317.5,400.8 318.7,397.5 324.7,395.7 324.5,394.5Z", "Noord-Holland": "M254.1,192.0 256.1,186.0 251.4,185.1 250.6,189.3 254.1,192.0ZM365.4,272.7 367.6,269.1 365.5,265.5 364.6,258.0 360.0,254.1 348.1,253.5 345.7,257.7 339.4,257.4 331.7,247.8 333.5,226.2 321.6,202.8 319.8,200.7 343.3,180.3 343.1,180.0 322.5,197.7 306.7,201.0 300.6,209.1 295.9,211.8 289.6,213.6 277.5,206.7 274.2,199.2 276.2,194.1 271.9,193.5 269.0,190.5 263.1,191.1 260.5,195.9 259.4,212.1 258.5,217.5 251.4,243.9 246.9,254.7 245.8,261.3 246.0,267.6 244.0,280.5 241.8,301.2 237.7,326.1 234.4,336.3 240.0,339.9 230.6,341.7 232.0,346.2 230.8,353.1 219.5,381.6 232.4,387.3 233.3,385.2 241.2,385.8 236.8,396.0 233.1,399.3 231.1,414.3 239.6,415.5 245.1,415.2 251.9,410.7 254.8,411.9 258.2,409.8 261.8,410.4 262.0,416.1 274.9,411.9 278.4,411.9 283.7,408.9 288.7,404.1 296.2,404.1 299.5,399.6 299.0,396.6 305.4,396.6 309.6,393.0 312.0,393.3 316.6,389.4 320.5,395.4 324.5,394.5 324.7,395.7 318.7,397.5 317.5,400.8 323.1,408.9 320.3,410.7 318.8,416.1 321.0,430.2 334.8,425.7 343.8,426.3 346.4,426.6 348.1,426.6 352.5,418.2 353.6,412.5 361.5,395.4 368.8,396.6 367.2,392.1 370.3,389.1 370.1,389.1 366.1,390.9 358.2,386.4 348.8,387.3 344.6,388.8 339.8,385.5 338.1,382.5 338.0,382.2 326.7,378.0 319.4,379.8 319.0,376.5 314.4,374.1 307.8,368.4 315.2,364.5 322.1,356.1 324.9,356.1 326.4,351.3 329.5,348.9 329.9,347.7 330.1,345.6 337.0,342.0 331.5,339.9 329.7,344.4 329.7,348.0 328.6,348.9 326.9,348.9 321.6,348.3 321.4,343.5 325.1,338.4 323.4,334.2 328.4,328.8 324.7,323.1 322.7,316.5 318.3,309.9 316.3,301.2 316.1,291.0 321.0,287.4 325.1,289.5 328.9,287.1 336.1,294.0 341.8,293.1 344.8,290.1 349.2,289.2 356.0,282.9 357.8,274.2 365.4,273.0 365.4,272.7ZM290.3,132.9 287.0,125.1 283.3,125.1 275.4,137.7 268.1,148.2 261.8,159.6 259.1,173.4 260.0,180.9 264.2,183.3 273.1,179.4 279.3,171.3 284.5,169.8 289.2,163.5 289.2,160.5 293.6,156.3 294.2,142.5 295.7,139.5 290.3,132.9Z", "Zuid-Holland": "M185.9,555.9 177.3,553.8 176.9,555.9 185.9,561.6 190.7,561.9 193.6,558.9 185.9,555.9ZM120.6,546.6 116.6,543.0 111.2,548.7 120.6,546.6ZM274.9,411.9 262.0,416.1 261.8,410.4 258.2,409.8 254.8,411.9 251.9,410.7 245.1,415.2 239.6,415.5 231.1,414.3 233.1,399.3 236.8,396.0 241.2,385.8 233.3,385.2 232.4,387.3 219.5,381.6 210.9,399.9 197.5,423.9 189.8,435.0 176.7,449.1 170.1,457.8 164.0,464.4 153.9,477.0 145.8,484.5 137.4,481.8 136.4,484.2 129.4,483.3 125.8,484.5 122.3,489.9 121.9,493.8 125.8,504.6 128.5,505.5 136.1,502.8 138.5,504.6 134.0,514.2 141.2,525.3 135.3,532.8 128.7,525.3 119.1,528.0 112.0,531.9 108.9,532.2 103.0,535.8 102.0,539.1 103.9,545.4 103.0,548.7 99.1,552.6 99.7,553.2 102.0,552.6 104.6,545.7 109.6,544.5 109.8,541.8 116.9,540.6 119.3,539.1 126.7,539.4 132.4,546.3 131.8,553.2 132.8,557.1 139.6,566.4 141.6,567.6 149.1,567.6 157.2,570.9 157.2,575.1 157.6,575.4 163.5,575.1 169.2,577.8 171.4,581.7 180.4,583.5 191.0,580.5 194.4,578.7 196.4,574.5 201.2,571.8 203.0,570.3 203.4,563.4 209.4,565.2 214.6,565.5 226.2,569.7 236.8,566.4 242.5,563.1 245.7,564.9 245.8,564.9 247.1,564.3 252.8,562.8 264.2,553.2 267.5,545.4 271.0,542.1 275.3,540.0 284.3,540.3 292.2,534.3 300.8,531.6 312.6,533.7 317.4,534.3 318.3,527.7 312.6,525.6 313.5,522.6 317.5,522.3 317.0,515.7 312.4,514.8 311.7,509.4 304.5,505.2 301.4,501.3 300.1,495.6 290.2,498.6 286.8,489.6 284.3,487.5 279.1,480.0 286.3,478.2 284.5,474.6 276.4,475.8 281.1,465.0 288.3,461.1 280.6,457.5 280.4,447.9 274.3,443.4 278.2,438.0 281.9,436.5 285.9,438.9 289.6,438.3 289.4,433.2 292.7,431.4 283.9,426.0 278.4,419.4 274.9,411.9ZM139.4,528.6 142.3,527.1 146.0,531.3 152.8,534.0 157.4,533.1 162.2,538.5 167.7,540.0 171.0,543.6 174.5,550.2 192.9,557.1 203.0,563.1 199.3,569.4 189.2,569.1 183.7,564.9 177.1,561.6 173.4,556.5 163.3,547.2 151.9,543.3 145.8,538.8 136.8,534.3 139.4,528.6Z", "Zeeland": "M40.3,657.9 25.7,663.6 24.1,662.4 12.9,668.4 13.6,675.3 15.6,679.8 10.7,685.5 14.2,689.4 12.9,692.4 19.7,702.9 27.6,707.4 41.9,706.2 39.5,693.9 48.4,691.2 50.7,693.6 53.5,688.8 62.7,693.6 65.8,693.0 72.4,697.2 83.8,699.3 91.0,703.2 89.9,706.2 90.3,715.8 95.8,717.3 103.0,716.7 108.3,713.1 107.7,720.0 121.2,715.2 129.8,707.4 135.5,706.2 139.4,707.1 159.2,692.1 171.9,675.6 166.6,667.8 160.5,668.1 154.3,671.7 149.5,671.7 138.5,670.2 132.0,659.7 123.9,657.9 122.8,664.2 120.4,669.9 113.4,671.7 104.3,679.2 93.2,678.6 89.9,675.0 77.8,675.0 71.2,668.7 62.7,667.2 52.4,663.6 45.6,658.5 40.3,657.9ZM99.7,553.2 99.1,552.6 94.3,557.7 85.3,557.1 75.4,560.7 71.5,564.0 69.7,567.9 71.5,576.6 77.6,581.1 76.1,587.4 73.2,588.3 70.4,593.1 70.1,600.0 61.4,603.3 55.0,601.8 46.3,603.0 25.4,617.4 24.5,621.6 29.4,627.0 36.0,631.8 41.7,641.1 50.6,648.3 62.5,646.8 65.8,642.9 72.1,646.8 77.4,652.2 80.0,656.7 83.7,655.5 90.1,660.0 94.1,664.2 102.6,662.7 105.9,660.9 110.5,661.5 115.1,649.8 114.2,646.5 124.1,641.4 126.3,643.8 134.8,650.4 137.9,651.0 140.1,655.8 148.4,659.1 157.6,661.5 164.9,657.9 171.4,661.5 173.4,667.5 179.6,667.2 178.0,664.8 177.3,655.2 179.5,652.5 169.0,628.5 172.1,617.1 170.6,610.8 164.0,601.8 164.0,597.3 168.1,591.6 172.3,589.8 165.7,588.3 159.8,583.8 157.6,575.4 157.2,575.1 148.8,576.6 145.6,579.9 136.8,574.5 131.5,573.9 130.0,569.1 125.4,564.6 123.7,560.1 112.9,560.7 108.1,556.8 101.1,558.6 96.7,558.3 99.7,553.2ZM93.2,570.9 96.5,574.8 102.4,576.6 106.1,579.9 108.5,590.1 112.9,591.3 104.6,601.2 98.4,598.2 91.8,598.5 87.2,600.9 76.3,602.4 70.2,599.7 71.2,593.4 76.1,589.5 78.1,579.3 83.5,577.5 93.2,570.9ZM146.5,579.9 148.8,577.8 156.3,576.6 158.1,579.0 156.7,583.5 150.8,583.8 147.3,587.1 146.9,590.1 151.9,596.1 147.3,597.0 142.5,596.1 133.1,600.9 126.9,602.1 125.8,605.7 129.6,607.2 137.7,614.1 142.9,622.5 158.9,623.1 161.3,629.4 168.1,632.4 169.5,640.8 169.7,648.3 162.0,646.8 156.8,650.1 153.2,650.7 145.8,646.2 139.0,635.4 136.6,629.1 128.7,623.7 120.8,620.7 117.7,622.5 115.3,616.8 104.4,618.0 105.4,613.5 109.8,612.0 108.9,608.4 104.6,601.2 112.9,591.3 117.7,589.8 122.8,595.8 130.0,594.9 137.9,590.7 141.8,590.4 146.5,585.6 146.5,579.9ZM74.8,624.9 70.4,621.0 68.0,615.0 63.3,612.0 60.3,607.5 62.7,603.6 65.3,609.3 71.3,613.2 78.1,622.2 74.8,624.9Z", "Noord-Brabant": "M471.4,552.6 469.2,552.3 456.0,554.4 449.6,552.3 447.2,548.4 441.7,546.6 440.2,543.6 433.4,540.6 429.3,534.0 420.9,531.0 415.2,531.6 412.1,535.2 401.9,531.3 399.7,535.5 393.3,537.0 386.5,533.7 380.4,543.0 378.8,551.7 371.8,555.9 367.7,558.9 363.3,558.0 361.1,558.3 359.5,559.5 355.1,557.7 342.6,557.1 338.0,554.7 338.0,548.1 330.2,543.6 324.9,545.7 321.4,540.6 315.5,537.6 312.6,533.7 300.8,531.6 292.2,534.3 284.3,540.3 275.3,540.0 271.0,542.1 267.5,545.4 264.2,553.2 252.8,562.8 247.1,564.3 245.8,564.9 245.7,564.9 239.4,570.9 225.6,574.5 218.8,575.1 207.0,570.9 203.0,570.3 201.2,571.8 200.1,579.3 193.1,585.6 187.0,586.2 172.3,589.8 168.1,591.6 164.0,597.3 164.0,601.8 170.6,610.8 172.1,617.1 169.0,628.5 179.5,652.5 177.3,655.2 178.0,664.8 179.6,667.2 190.3,666.6 191.4,672.6 199.5,673.8 206.3,670.5 208.1,667.5 200.8,657.6 201.7,647.4 199.5,645.3 210.0,639.3 218.3,636.9 227.6,635.4 229.5,638.1 226.2,645.0 227.1,653.1 234.4,650.1 244.5,652.2 251.9,652.2 251.4,646.8 256.1,644.4 262.8,634.8 267.2,630.0 278.6,631.5 279.7,635.1 283.2,636.3 282.4,641.7 280.0,645.3 281.1,653.1 273.4,650.1 269.7,650.7 270.5,655.5 273.8,657.3 283.2,655.5 291.6,654.9 299.5,661.2 305.8,653.4 313.3,646.5 314.6,638.4 316.6,635.4 321.0,638.7 327.1,638.7 331.9,650.7 325.6,662.1 334.1,671.7 336.9,675.9 337.2,685.2 342.6,687.0 349.4,683.1 357.1,688.5 354.1,699.6 356.3,701.7 360.9,699.9 367.0,701.7 374.4,701.1 376.2,697.2 389.3,701.4 393.9,695.4 398.1,694.5 401.8,690.0 407.5,691.5 415.2,701.4 414.6,706.8 416.7,713.7 426.4,711.3 427.7,697.8 436.1,685.5 473.5,674.1 483.8,664.5 472.9,645.0 470.9,632.4 469.4,628.8 466.7,610.2 476.4,612.0 479.4,614.4 484.5,613.8 497.2,609.0 502.3,614.4 503.8,605.4 501.2,601.2 500.1,593.4 491.3,586.2 489.7,582.9 490.0,577.2 488.2,567.3 484.3,565.2 478.1,564.0 475.3,561.6 474.4,555.0 471.4,552.6Z", "Limburg": "M487.8,555.6 480.8,554.1 476.8,546.6 472.2,547.2 471.4,552.6 474.4,555.0 475.3,561.6 478.1,564.0 484.3,565.2 488.2,567.3 490.0,577.2 489.7,582.9 491.3,586.2 500.1,593.4 501.2,601.2 503.8,605.4 502.3,614.4 497.2,609.0 484.5,613.8 479.4,614.4 476.4,612.0 466.7,610.2 469.4,628.8 470.9,632.4 472.9,645.0 483.8,664.5 473.5,674.1 436.1,685.5 427.7,697.8 426.4,711.3 416.7,713.7 431.4,720.0 433.6,724.5 442.8,725.4 448.6,723.9 453.6,724.8 455.6,734.7 464.1,729.6 466.3,733.8 470.0,736.5 467.0,740.7 461.5,744.6 465.9,750.0 464.1,752.4 458.8,753.0 460.4,756.9 458.4,762.3 454.5,762.0 452.0,769.8 455.3,773.4 453.4,780.6 445.0,791.4 451.6,792.6 446.1,803.7 445.9,806.7 440.9,807.0 438.2,813.3 431.0,818.7 430.1,826.2 433.2,832.8 440.2,836.4 440.7,847.5 438.2,851.7 440.4,853.5 445.0,850.5 448.5,852.9 449.9,849.0 455.5,845.1 461.0,853.2 468.0,850.5 471.3,850.8 475.5,849.0 476.2,853.2 481.9,854.7 483.8,852.9 490.8,851.7 491.7,853.5 500.3,853.8 501.6,847.8 491.9,840.6 493.7,837.0 497.2,839.7 501.1,835.8 499.4,829.8 499.9,826.2 510.6,821.7 512.6,818.4 510.2,812.1 511.5,803.4 499.8,799.5 499.6,785.1 490.2,786.0 488.2,783.6 477.5,787.5 479.2,779.4 474.2,774.6 474.0,768.6 475.7,764.4 480.5,759.9 485.1,769.5 490.8,765.9 490.9,761.7 498.3,752.7 503.1,750.9 510.4,744.3 513.4,739.5 519.6,736.5 526.4,735.3 528.6,732.6 522.0,728.1 529.7,724.2 526.8,721.8 517.2,727.5 511.5,728.4 509.9,725.1 509.0,713.7 512.3,713.1 509.9,707.1 512.3,705.6 519.4,697.5 523.1,690.6 527.5,680.1 531.4,678.3 538.0,672.0 535.8,663.0 534.1,660.0 537.6,637.5 535.6,632.7 535.4,626.1 533.2,621.9 529.0,618.3 525.3,609.9 520.5,605.7 518.7,602.1 513.2,598.2 518.0,582.9 512.6,582.0 503.3,578.1 501.2,567.3 504.7,564.9 495.4,558.6 488.2,558.6 487.8,555.6Z"};
 
@@ -1326,7 +1331,9 @@ const AXOLOTL_PIC = `<svg class="pic" viewBox="0 0 64 64" width="1em" height="1e
 
 const PETS = [{id:"cat", ic:"🐱", price:4}, {id:"dog", ic:"🐶", price:4}, {id:"bunny", ic:"🐰", price:4},
   {id:"hamster", ic:"🐹", price:4}, {id:"bird", ic:"🐦", price:4}, {id:"fish", ic:"🐟", price:4}, {id:"turtle", ic:"🐢", price:4}, {id:"pig", ic:"🐷", price:5}, {id:"horse", ic:"🐴", price:6},
-  {id:"fox", ic:"🦊", price:5}, {id:"axolotl", ic:AXOLOTL_PIC, price:6}];
+  {id:"fox", ic:"🦊", price:5}, {id:"axolotl", ic:AXOLOTL_PIC, price:6},
+  {id:"ghost", ic:"👻", magic:true}, {id:"unicorn", ic:"🦄", magic:true}, {id:"dragon", ic:"🐉", magic:true},
+  {id:"alien", ic:"👽", magic:true}, {id:"robot", ic:"🤖", magic:true}, {id:"fairy", ic:"🧚", magic:true}, {id:"mermaid", ic:"🧜", magic:true}, {id:"genie", ic:"🧞", magic:true}];
 const pets = () => { const p = load("topo-pets"); return p && Array.isArray(p.own) ? p : {own:[], on:null}; };
 function showPet(){
   let el = document.getElementById("pet"); const it = PETS.find(x => x.id===pets().on);
@@ -1358,7 +1365,7 @@ function petShop(){
   G = null; hud.hidden = true; card.classList.add("menu"); card.classList.remove("writing"); clearFx(); showDots([]);
   const p = pets(), n = tokens();
   card.innerHTML = `<div class="petshop qnum">${t("petTitle")}</div><p class="q">${t("shopHave", n)}</p><p class="note">${t("petNote")}</p>
-    ${PETS.map(it => { const own = p.own.includes(it.id), on = p.on===it.id;
+    ${PETS.filter(it => !it.magic || p.own.includes(it.id)).map(it => { const own = p.own.includes(it.id), on = p.on===it.id;
       return `<div class="shopitem"><span class="ic">${it.ic}</span><span><strong>${t("pet_"+it.id)}</strong><small>${t(own ? (on ? "petOn" : "petOwn") : "petNew")}</small></span>
       <button class="opt" type="button" data-pet="${it.id}" ${!own && n < it.price ? "disabled" : ""}>${own ? t(on ? "petAway" : "petPick") : t("buy", it.price)}</button></div>`; }).join("")}
     <button class="big ghost" id="back" type="button">${t("back")}</button>`;
@@ -1369,7 +1376,85 @@ function petShop(){
     save("topo-pets", p); click(); showPet(); petShop(); });
   document.getElementById("back").onclick = menu;
 }
+
+
+const SCORE_PRICE = 8000;
+const scoreName = k => k.startsWith("toets-") ? t("toetsTitle", rl(k.slice(6))) : k.startsWith("schrijf-") ? `${t("lv_write")} · ${rl(k.slice(8))}` : t("lv_"+k);
+const scoreSum = () => Object.values(best).reduce((s, v) => s + (v > 0 ? v : 0), 0);
+function payScore(n){
+  Object.keys(best).sort((a,b) => best[b] - best[a]).forEach(k => { if(n <= 0) return;
+    const take = Math.min(best[k], n); best[k] -= take; n -= take; if(best[k] <= 0) delete best[k]; });
+  save("topo-best", best);
+}
+function scoreRoom(){
+  G = null; hud.hidden = true; card.classList.add("menu"); card.classList.remove("writing"); clearFx(); showDots([]);
+  const keys = Object.keys(best).filter(k => best[k] > 0).sort((a,b) => best[b] - best[a]), sum = scoreSum();
+  card.innerHTML = `<div class="scores qnum">${t("scoreTitle")}</div><p class="q">${t("scoreSum", fmt(sum, lang))}</p><p class="note">${t("scoreNote", fmt(SCORE_PRICE, lang))}</p>
+    <div class="shopitem"><span class="ic">🪙</span><span><strong>${t("scoreSwap")}</strong><small>${t("shopHave", tokens())}</small></span>
+      <button class="opt" type="button" id="swap" ${sum < SCORE_PRICE ? "disabled" : ""}>${t("scoreBuy", fmt(SCORE_PRICE, lang))}</button></div>
+    ${keys.length ? keys.map(k => `<div class="shopitem"><span class="ic">🏅</span><span><strong>${scoreName(k)}</strong></span><strong>${fmt(best[k], lang)}</strong></div>`).join("") : `<p class="note">${t("scoreNone")}</p>`}
+    <button class="big ghost" id="back" type="button">${t("back")}</button>`;
+  document.getElementById("swap").onclick = () => { if(scoreSum() < SCORE_PRICE) return; payScore(SCORE_PRICE); setTokens(tokens() + 1); click(); scoreRoom(); };
+  document.getElementById("back").onclick = menu;
+}
 const bindHelp = () => card.querySelectorAll("[data-help]").forEach(b => b.onclick = () => useHelp(b.dataset.help));
+
+
+
+
+
+const QUESTS = [
+  {id:"missers",  tok:1},
+  {id:"rondes2",  tok:1, need:2},
+  {id:"rij5",     tok:2},
+  {id:"spelling", tok:3}];
+const MAGIC_CHANCE = 1/30;
+
+const questDay = () => { const d = new Date(); return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5); };
+function dailyQuest(){
+  const day = questDay(), q = load("topo-quest");
+  return q && q.day === day ? q : {day, id: QUESTS[day % QUESTS.length].id, n:0, done:false, opened:false};
+}
+
+function questStep(id){
+  const q = dailyQuest(); if(q.id !== id || q.done) return;
+  const Q = QUESTS.find(x => x.id===id); q.n++; if(q.n >= (Q.need||1)) q.done = true;
+  save("topo-quest", q);
+  if(q.done) toastQuest();
+}
+function toastQuest(){
+  const b = document.getElementById("board"), d = document.createElement("div");
+  d.className = "toast"; d.innerHTML = `<i class="giftic">🎁</i><span>${t("questDoneToast")}<b>${t("questOpen")}</b></span>`;
+  b.appendChild(d); setTimeout(() => d.remove(), 2600);
+}
+function questRoom(got){
+  G = null; hud.hidden = true; card.classList.add("menu"); card.classList.remove("writing"); clearFx(); showDots([]);
+  const q = dailyQuest(), Q = QUESTS.find(x => x.id===q.id), need = Q.need||1, ready = q.done && !q.opened;
+  card.innerHTML = `<div class="questroom qnum">${t("questTitle")}</div>
+    <p class="q">${t("q_"+q.id)}</p>
+    <p class="note">${q.opened ? t("questTomorrow") : q.done ? t("questReady") : t("questProgress", Math.min(q.n, need), need)}</p>
+    <div class="giftbox ${ready ? "ready" : ""}" aria-hidden="true">${q.opened ? "📦" : "🎁"}</div>
+    ${got ? `<div class="newtro">${got.map(g => `<div>${g}</div>`).join("")}</div>` : `<p class="note">${t("questPrize", Q.tok)}</p>`}
+    ${ready ? `<button class="big" id="openGift" type="button">${t("questOpen")}</button>` : ""}
+    <button class="big ghost" id="back" type="button">${t("back")}</button>`;
+  const ob = document.getElementById("openGift"); if(ob) ob.onclick = openGiftBox;
+  document.getElementById("back").onclick = menu;
+}
+function openGiftBox(){
+  const q = dailyQuest(); if(!q.done || q.opened) return;
+  const Q = QUESTS.find(x => x.id===q.id), got = [];
+  setTokens(tokens() + Q.tok); got.push(`🪙 ${Q.tok} Topo Token${Q.tok===1 ? "" : "s"}`);
+  const h = inv(), helper = Math.random() < 0.5 ? "fifty" : "tip"; h[helper] = (h[helper]||0) + 1; save("topo-shop", h);
+  got.push(`${SHOP.find(x => x.id===helper).ic} ${t("it_"+helper)}`);
+  const p = pets(), free = PETS.filter(x => x.magic && !p.own.includes(x.id));
+  if(free.length && Math.random() < MAGIC_CHANCE){
+    const m = free[Math.floor(Math.random() * free.length)];
+    p.own.push(m.id); p.on = m.id; save("topo-pets", p); showPet();
+    got.push(`✨ ${m.ic} ${t("pet_"+m.id)} ${t("questMagic")}`);
+  }
+  q.opened = true; save("topo-quest", q); click();
+  questRoom(got);
+}
 
 
 
@@ -1543,7 +1628,7 @@ function answer(given, btn){
   G.lock = true; cancelAnimationFrame(G.raf);
   const q = G.qs[G.i], ok = q.type==="write" ? normSpell(given)===normSpell(q.name) : given===q.name, fb = document.getElementById("fb");
   if(ok){
-    G.streak++; G.maxS = Math.max(G.maxS||0, G.streak); if(earn("first")) G.newT.push("first"); if(G.streak>=5 && earn("vijf")) G.newT.push("vijf"); if(G.streak>=6 && earn("combo")) G.newT.push("combo"); if(G.streak>=12 && earn("combo12")) G.newT.push("combo12");
+    G.streak++; G.maxS = Math.max(G.maxS||0, G.streak); if(earn("first")) G.newT.push("first"); if(G.streak>=5 && earn("vijf")) G.newT.push("vijf"); if(G.streak>=6 && earn("combo")) G.newT.push("combo"); if(G.streak>=12 && earn("combo12")) G.newT.push("combo12"); if(G.streak>=5) questStep("rij5");
     const bonus = Math.round(50 * Math.max(0, 1-(performance.now()-G.t0)/TIME));
     let pts = (100+bonus) * mult(); if(G.boost > 0){ pts *= 2; G.boost--; }
     G.score += pts; if(bonus>40) G.fast = (G.fast||0) + 1;
@@ -1601,6 +1686,10 @@ function finish(){
   if(!G.practice && G.level.id==="toets-zuid" && nMiss===0) tgot("z-perfect");
   if(!G.practice && G.level.write && nMiss===0) tgot("spell");
   if(!G.practice && G.level.toets && REGIONS[region].water && !G.missed.some(m=>WATER.some(w=>w.name===m))) tgot("maas");
+
+  if(G.practice) questStep("missers");
+  questStep("rondes2");
+  if(!G.practice && G.level.write && nMiss===0) questStep("spelling");
   if((G.fast||0) >= 10) tgot("snel");
   if(G.score >= 10000) tgot("punten");
   { const n = (load("topo-rounds") || 0) + 1; save("topo-rounds", n); if(n >= 5) tgot("rondes5"); }
@@ -1773,6 +1862,8 @@ function menu(){
     <button class="big ghost cabbtn" id="cab" type="button">${TROPHY_SVG("","goud")}${t("cabBtn", shownACH().filter(a=>trophies[a.id]).length, shownACH().length)}</button>
     <button class="big ghost" id="shopBtn" type="button">${t("shopBtn", tokens())}</button>
     <button class="big ghost" id="petBtn" type="button">${t("petBtn")}</button>
+    <button class="big ghost" id="scoreBtn" type="button">${t("scoreBtn")}</button>
+    <button class="big ${dailyQuest().done && !dailyQuest().opened ? "" : "ghost"}" id="questBtn" type="button">${t(dailyQuest().done && !dailyQuest().opened ? "questBtnReady" : "questBtn")}</button>
     ${isAtlas() || isGold() ? "" : `<button class="big ghost" id="bouw" type="button">${t(isCrew()?"bouwCrew":isZen()?"bouwZen":"bouwBlok")}</button>`}
     <div class="qnum">${t("whichRegion")}</div>
     <div class="regions" role="group" aria-label="${t("regionAria")}">${Object.keys(REGIONS).map(k=>`<button class="reg" type="button" data-r="${k}" aria-pressed="${k===region}">${rl(k)}${done["toets-"+k]?" ✓":""}</button>`).join("")}</div>
@@ -1782,7 +1873,7 @@ function menu(){
     ${todo.length?"":`<div class="alldone">${t("allDone")}</div>`}
     <div class="levels">${all.map(btn).join("")}</div>`;
   card.querySelectorAll(".lvl").forEach(b => b.onclick = () => start(LEVELS[+b.dataset.i]));
-  document.getElementById("cab").onclick = cabinet; document.getElementById("shopBtn").onclick = shop; document.getElementById("petBtn").onclick = petShop;
+  document.getElementById("cab").onclick = cabinet; document.getElementById("shopBtn").onclick = shop; document.getElementById("petBtn").onclick = petShop; document.getElementById("scoreBtn").onclick = scoreRoom; document.getElementById("questBtn").onclick = () => questRoom();
   const bw = document.getElementById("bouw"); if(bw) bw.onclick = builder;
   const sb = document.getElementById("study"); if(sb) sb.onclick = study;
   const rb = document.getElementById("resume"); if(rb) rb.onclick = resumeGame;
@@ -1796,7 +1887,7 @@ document.getElementById("langBtn").onclick = () => { lang = lang==="en" ? "nl" :
   else if(G && G.end) drawEnd();
   else if(G){ if(!G.lock) next(true); }
   else if(card.querySelector(".shelf")) cabinet();
-  else if(card.querySelector(".petshop")) petShop(); else if(card.querySelector(".shop")) shop();
+  else if(card.querySelector(".questroom")) questRoom(); else if(card.querySelector(".scores")) scoreRoom(); else if(card.querySelector(".petshop")) petShop(); else if(card.querySelector(".shop")) shop();
   else menu(); };
 
 (() => { const wrapEl = document.querySelector(".wrap"), vv = window.visualViewport;
