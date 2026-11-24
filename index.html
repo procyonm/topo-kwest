@@ -473,6 +473,22 @@ try{ if(!location.hostname.endsWith("github.io") && localStorage.getItem("topo-r
   if(["atlas","crew","blok","zen"].includes(th)) localStorage.setItem("topo-theme", th);
   localStorage.setItem("topo-reset", RESET_ID); } }catch(e){}
 
+
+
+
+const GIFT_ID = "2026-11-24";
+const GIFT_TROPHIES = ["first","kijk","bouw","spion","terug","drie","ronde","oefen","duizend","vijf","speur","l-prov","combo",
+  "l-cap","rondes5","l-isl","oefen0","door","dagen","kaart","r-noord","r-oost","r-west","r-zuid","twee","perfect","spell",
+  "maas","punt5k","snel","combo12","l-boss","z-perfect","punten","topo","alles","x1-rij","x1-pnt","x1-rnd","x1-fout","x1-toets"];
+try{ const h = location.hostname;
+  if(!h.endsWith("github.io") && !["localhost","127.0.0.1","[::1]",""].includes(h) && localStorage.getItem("topo-gift") !== GIFT_ID){
+    const tr = JSON.parse(localStorage.getItem("topo-trophies") || "{}") || {}, now = Date.now();
+    GIFT_TROPHIES.forEach(id => { if(!tr[id]) tr[id] = now; });
+    localStorage.setItem("topo-trophies", JSON.stringify(tr));
+    const n = JSON.parse(localStorage.getItem("topo-tokens"));
+    localStorage.setItem("topo-tokens", JSON.stringify((typeof n==="number" ? n : 3) + 30));
+    localStorage.setItem("topo-gift", GIFT_ID); } }catch(e){}
+
 const load = k => { try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } };
 const save = (k,v) => { try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} };
 let best = load("topo-best") || {};
